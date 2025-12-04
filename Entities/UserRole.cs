@@ -2,6 +2,6 @@
 {
     public enum UserRole
     {
-        USER, ADMIN, PUBLISHER, DEVERLOPER 
+        CUSTOMER, SELLER
     }
 }

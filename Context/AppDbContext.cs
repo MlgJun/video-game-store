@@ -9,8 +9,6 @@ namespace VideoGameStore.Context
     {
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Game> Games { get; set; } = null!;
-        public DbSet<Publisher> Publishers { get; set; } = null!;
-        public DbSet<Developer> Developers { get; set; } = null!;
         public DbSet<Order> Orders { get; set; } = null!;
         public DbSet<Cart> Carts { get; set; } = null!;
         public DbSet<OrderItem> OrderItems { get; set; } = null!;
@@ -34,19 +32,14 @@ namespace VideoGameStore.Context
                 .Property(oi => oi.Price)
                 .HasColumnType("decimal(10,2)");
 
-            modelBuilder.Entity<Developer>()
-                .HasOne(d => d.Publisher)
-                .WithMany(p => p.Developers)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Game>()
-                .HasOne(g => g.Developer)
-                .WithMany(d => d.Games)
-                .OnDelete(DeleteBehavior.Cascade);
-
             modelBuilder.Entity<User>()
                 .Property(u => u.Role)
                 .HasConversion(new EnumToStringConverter<UserRole>());
+
+            modelBuilder.Entity<User>().UseTpcMappingStrategy();
+
+            modelBuilder.Entity<Customer>().ToTable("Customers");
+            modelBuilder.Entity<Seller>().ToTable("Sellers");
         }
     }
 }
