@@ -3,8 +3,8 @@
     public class Cart
     {
         public long Id { get; set; }
-        public virtual User User { get; set; } = null!;
-        public long UserId { get; set; }
+        public virtual Customer Customer { get; set; } = null!;
+        public long CustomerId { get; set; }
         public List<CartItem>? CartItems { get; set; }
     }
 }
