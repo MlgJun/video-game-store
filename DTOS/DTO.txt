@@ -1,6 +1,0 @@
-﻿namespace VideoGameStore.DTOS
-{
-    public class DTO
-    {
-    }
-}
