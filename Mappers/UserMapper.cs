@@ -5,10 +5,11 @@ namespace VideoGameStore.Mappers
 {
     public class UserMapper
     {
-        private CartMapper _cartMapper;
-        public UserResponse ToResponse(User user)
-        {
-            return new UserResponse(user.Login, _cartMapper.ToResponse(user.Cart), user.Role);
-        }
+        //private CartMapper _cartMapper;
+        //public UserResponse ToResponseCustomer(Customer customer)
+        //{
+        //    return new UserResponse(customer.Login, _cartMapper.ToResponse(customer.Cart), customer.Role);
+        //}
+
     }
 }
