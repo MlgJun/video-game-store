@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System;
 using VideoGameStore.Entities;
 
 namespace VideoGameStore.Context
@@ -41,6 +43,10 @@ namespace VideoGameStore.Context
                 .HasOne(g => g.Developer)
                 .WithMany(d => d.Games)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Role)
+                .HasConversion(new EnumToStringConverter<UserRole>());
         }
     }
 }
