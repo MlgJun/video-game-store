@@ -1,10 +1,4 @@
-﻿using VideoGameStore.Entities;
-
-namespace VideoGameStore.Dtos
+﻿namespace VideoGameStore.Dtos
 {
-    public class CartItemResponse
-    {
-        public string GameTitle { get; set; } = null!;
-        public int Quantity { get; set; } = 1;
-    }
+    public record class CartItemResponse(string GameTitle, int Quantity);
 }

@@ -1,4 +1,6 @@
-﻿namespace VideoGameStore.Dtos
+﻿using VideoGameStore.Entities;
+
+namespace VideoGameStore.Dtos
 {
     public class CartItemRequest
     {
