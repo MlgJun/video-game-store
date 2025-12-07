@@ -11,7 +11,7 @@ namespace VideoGameStore.Services
         /// </summary>
         /// <param name="sellerId"></param>
         /// <returns></returns>
-        public Page<GameResponse> FindAllBySellerId(long sellerId);
+        public Page<GameResponse> FindAllBySellerId(long sellerId, Pageable pageable);
         public GameResponse Create(GameRequest request);
         public GameResponse Update(long gameId, GameRequest request);
         public bool Delete(long gameId);
