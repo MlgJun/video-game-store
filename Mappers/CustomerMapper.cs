@@ -5,7 +5,13 @@ namespace VideoGameStore.Mappers
 {
     public class CustomerMapper
     {
-        private CartMapper _cartMapper;
+        private readonly CartMapper _cartMapper;
+
+        public CustomerMapper(CartMapper cartMapper)
+        {
+            _cartMapper = cartMapper;
+        }
+
         public CustomerResponse ToResponse(Customer customer)
         {
             return new CustomerResponse(customer.Id,customer.Login, _cartMapper.ToResponse(customer.Cart));

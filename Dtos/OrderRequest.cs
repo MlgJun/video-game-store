@@ -1,4 +1,6 @@
-﻿namespace VideoGameStore.Dtos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VideoGameStore.Dtos
 {
-    public record class OrderRequest (List<OrderItemRequest> OrderItems);
+    public record class OrderRequest ([MinLength(1)] List<OrderItemRequest> OrderItems);
 }

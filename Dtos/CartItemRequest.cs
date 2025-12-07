@@ -1,10 +1,6 @@
-﻿using VideoGameStore.Entities;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace VideoGameStore.Dtos
 {
-    public class CartItemRequest
-    {
-        public long GameId { get; set; }
-        public int Quantity { get; set; }
-    }
+    public record class CartItemRequest ([Range(1, long.MaxValue)] long GameId, [Range(1, int.MaxValue)] int Quantity);
 }

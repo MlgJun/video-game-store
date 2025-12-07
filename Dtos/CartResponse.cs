@@ -1,4 +1,4 @@
 ﻿namespace VideoGameStore.Dtos
 {
-    public record class CartResponse(List<CartItemResponse> cartItems);
+    public record class CartResponse(List<CartItemResponse> CartItems);
 }

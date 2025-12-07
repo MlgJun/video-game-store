@@ -1,11 +1,7 @@
-﻿using VideoGameStore.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using VideoGameStore.Entities;
 
 namespace VideoGameStore.Dtos
 {
-    public class UserRequest
-    {
-        public string Login { get; set; } = null!;
-        public string Password { get; set; } = null!;
-        public UserRole UserRole { get; set; }
-    }
+    public record class UserRequest ([EmailAddress] string Login, [MinLength(6)] string Password, UserRole UserRole);
 }

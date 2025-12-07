@@ -5,7 +5,7 @@ namespace VideoGameStore.Mappers
 {
     public class CartMapper
     {
-        private CartItemMapper _itemMapper;
+        private readonly CartItemMapper _itemMapper;
 
         public CartMapper(CartItemMapper itemMapper)
         {   

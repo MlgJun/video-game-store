@@ -1,4 +1,6 @@
-﻿namespace VideoGameStore.Dtos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VideoGameStore.Dtos
 {
-    public record class CustomerResponse(long Id, string Login, CartResponse CartResponse);
+    public record class CustomerResponse(long Id,string Login, CartResponse CartResponse);
 }

@@ -5,7 +5,7 @@ namespace VideoGameStore.Mappers
 {
     public class SellerMapper
     {
-        private GameMapper _gameMapper;
+        private readonly GameMapper _gameMapper;
 
         public SellerMapper(GameMapper gameMapper)
         {

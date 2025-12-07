@@ -5,11 +5,13 @@ namespace VideoGameStore.Mappers
 {
     public class OrderMapper
     {
-        private OrderItemMapper _orderItemMapper;
+        private readonly OrderItemMapper _orderItemMapper;
+
         public OrderMapper(OrderItemMapper orderItemMapper)
         {
             _orderItemMapper = orderItemMapper;    
         }
+
         public OrderResponse ToResponse(Order order)
         {
             return new OrderResponse(_orderItemMapper.ToResponseList(order.OrderItems), order.TotalAmount);

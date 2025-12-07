@@ -1,11 +1,11 @@
-﻿namespace VideoGameStore.Dtos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VideoGameStore.Dtos
 {
-    public class GameRequest
-    {
-        public string DeveloperTitle { get; set; } = null!;
-        public string PublisherTitle { get; set; } = null!;
-        public decimal Price { get; set; }
-        public string Title { get; set; } = null!;
-        public string? Description { get; set; }
-    }
+    public record class GameRequest ([MinLength(2)] [MaxLength(100)] string DeveloperTitle,
+        [MinLength(2)][MaxLength(100)] string PublisherTitle,
+        [Range(0.1, double.MaxValue)] decimal Price,
+        [MinLength(2)][MaxLength(100)] string Title,
+        [MaxLength(1000)] string? Description);
+    
 }
