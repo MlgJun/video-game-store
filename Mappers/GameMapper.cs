@@ -24,14 +24,14 @@ namespace VideoGameStore.Mappers
         }
         public List<GameResponse> ToResponseList(List<Game> games)
         {
-            List<GameResponse> orederItems = [];
+            List<GameResponse> gameResponeList = [];
 
             foreach (var i in games)
             {
-                orederItems.Add(ToResponse(i));
+                gameResponeList.Add(ToResponse(i));
             }
 
-            return orederItems;
+            return gameResponeList;
         }
 
     }
