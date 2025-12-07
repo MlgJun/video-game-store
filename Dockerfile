@@ -12,16 +12,18 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["VideoGameStore.csproj", "."]
-RUN dotnet restore "./VideoGameStore.csproj"
-COPY . .
-WORKDIR "/src/."
-RUN dotnet build "./VideoGameStore.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# Этот этап используется для публикации проекта службы, который будет скопирован на последний этап
+# СКОПИРУЙТЕ ПРАВИЛЬНЫЙ ПУТЬ
+COPY ["VideoGameStore/VideoGameStore.csproj", "VideoGameStore/"]
+RUN dotnet restore "./VideoGameStore/VideoGameStore.csproj"
+
+COPY . .
+WORKDIR "/src/VideoGameStore"
+RUN dotnet build "VideoGameStore.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./VideoGameStore.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "VideoGameStore.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Этот этап используется в рабочей среде или при запуске из VS в обычном режиме (по умолчанию, когда конфигурация отладки не используется)
 FROM base AS final
