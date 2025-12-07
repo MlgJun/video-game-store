@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System;
 using VideoGameStore.Entities;
 
 namespace VideoGameStore.Context
@@ -39,7 +38,24 @@ namespace VideoGameStore.Context
             modelBuilder.Entity<User>().UseTpcMappingStrategy();
 
             modelBuilder.Entity<Customer>().ToTable("Customers");
+
+            modelBuilder.Entity<Customer>()
+                .HasOne(c => c.Cart)
+                .WithOne(c => c.Customer)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Seller>().ToTable("Sellers");
+
+            modelBuilder.Entity<Cart>()
+                .HasMany(c => c.CartItems)
+                .WithOne(c => c.Cart)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Cart>()
+                .HasIndex(c => c.CustomerId)
+                .IsUnique();
+
+            modelBuilder.Entity<CartItem>().HasIndex(ci => ci.CartId);
         }
     }
 }
