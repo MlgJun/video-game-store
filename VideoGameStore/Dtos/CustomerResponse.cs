@@ -2,5 +2,5 @@
 
 namespace VideoGameStore.Dtos
 {
-    public record class CustomerResponse(long Id,string Login, CartResponse CartResponse);
+    public record class CustomerResponse(long Id, string Username, string Email, CartResponse CartResponse);
 }
