@@ -4,16 +4,16 @@ namespace VideoGameStore.Services
 {
     public interface IGameService
     {
-        public GameResponse FindById(long gameId);
-        public Page<GameResponse> FindAll();
+        public Task<GameResponse> FindById(long gameId);
+        public Task<Page<GameResponse>> FindAll();
         /// <summary>
         /// Найти все игры продавца
         /// </summary>
         /// <param name="sellerId"></param>
         /// <returns></returns>
-        public Page<GameResponse> FindAllBySellerId(long sellerId, Pageable pageable);
-        public GameResponse Create(GameRequest request);
-        public GameResponse Update(long gameId, GameRequest request);
-        public bool Delete(long gameId);
+        public Task<Page<GameResponse>> FindAllBySellerId(long sellerId, Pageable pageable);
+        public Task<GameResponse> Create(GameRequest request);
+        public Task<GameResponse> Update(long gameId, GameRequest request);
+        public Task<bool> Delete(long gameId);
     }
 }

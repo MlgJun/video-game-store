@@ -4,7 +4,7 @@ namespace VideoGameStore.Services
 {
     public interface IUserService
     {
-        public SellerResponse CreateSeller(UserRequest request);
-        public CustomerResponse CreateCustomer(UserRequest request);
+        public Task<SellerResponse> CreateSeller(UserRequest request);
+        public Task<CustomerResponse> CreateCustomer(UserRequest request);
     }
 }

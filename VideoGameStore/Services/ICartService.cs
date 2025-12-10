@@ -10,14 +10,14 @@ namespace VideoGameStore.Services
         /// <param name="cartId"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public CartResponse AddToCart(long cartId, CartItemRequest request);
+        public Task<CartResponse> AddToCart(long cartId, CartItemRequest request);
         /// <summary>
         /// Удаляет указанное количество товара из корзины. Полностью удаляет позицию при нулевом остатке.
         /// </summary>
         /// <param name="cartId"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public CartResponse RemoveFromCart(long cartId, CartItemRequest request);
-        public void Clear(long cartId);
+        public Task<CartResponse> RemoveFromCart(long cartId, CartItemRequest request);
+        public Task Clear(long cartId);
     }
 }

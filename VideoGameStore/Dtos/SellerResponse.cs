@@ -1,4 +1,4 @@
 ﻿namespace VideoGameStore.Dtos
 {
-    public record class SellerResponse(long Id, string Login, List<GameResponse>? Games);
+    public record class SellerResponse(long Id, string Username, string Email, List<GameResponse>? Games);
 }
