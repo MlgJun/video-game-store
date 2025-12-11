@@ -44,7 +44,9 @@ namespace VideoGameStore.Controllers
         [Authorize(Roles = "Seller")]
         public async Task<ActionResult> DeleteGame(long id)
         {
-            await _gameService.Delete(id);
+            var seller = GetCurrentDomainUserAsync();
+            
+            await _gameService.Delete(id, seller.Id);
             return NoContent();
         }
 
@@ -55,7 +57,9 @@ namespace VideoGameStore.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(await _gameService.Update(id, gameRequest));
+            var seller = GetCurrentDomainUserAsync();
+
+            return Ok(await _gameService.Update(id, seller.Id, gameRequest));
         }
 
         [HttpPost]
