@@ -6,10 +6,7 @@ namespace VideoGameStore.Services
     {
         public Task<GameResponse> FindById(long gameId);
         public Task<Page<GameResponse>> FindAll(Pageable pageable);
-<<<<<<< HEAD
-=======
         public Task<Page<GameResponse>> FindAllByFilter(Pageable pageable, FilterRequest filter);
->>>>>>> main
         /// <summary>
         /// Найти все игры продавца
         /// </summary>

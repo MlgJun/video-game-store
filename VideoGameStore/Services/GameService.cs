@@ -5,6 +5,7 @@ using VideoGameStore.Mappers;
 using VideoGameStore.Utils;
 using VideoGameStore.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace VideoGameStore.Services
 {
@@ -50,16 +51,36 @@ namespace VideoGameStore.Services
             return await _context.Games.ToPageAsync(pageable, g => _gameMapper.ToResponse(g), null);
         }
 
+        public async Task<Page<GameResponse>> FindAllByFilter(Pageable pageable, FilterRequest filter)
+        {
+            List<Predicate<Game>> predicates = new List<Predicate<Game>>();
+
+            if(filter.MinPrice > 0)
+                predicates.Add(g => g.Price >= filter.MinPrice);
+
+            if (filter.MaxPrice > 0)
+                predicates.Add(g => g.Price >= filter.MaxPrice);
+
+            if (!filter.GameTitle.IsNullOrEmpty())
+                predicates.Add(p => p.Title.Contains(filter.GameTitle));
+
+            //if (!filter.Genres.IsNullOrEmpty())
+            //    predicates.Add(p => p.Title.Contains(filter.GameTitle));
+
+            return await _context.Games.ToPageAsync(pageable, g => _gameMapper.ToResponse(g), predicates);
+        }
+
         public async Task<Page<GameResponse>> FindAllBySellerId(long sellerId, Pageable pageable)
         {
-            return await _context.Games.ToPageAsync(pageable, g => _gameMapper.ToResponse(g), g => g.Seller.Id == sellerId);
+            return await _context.Games.ToPageAsync(pageable, g => _gameMapper.ToResponse(g), 
+                new List<Predicate<Game>>() { g => g.Seller.Id == sellerId });
         }
 
         public async Task<GameResponse> FindById(long gameId)
         {
             Game? game = await _context.Games.AsNoTracking().FirstOrDefaultAsync(g => g.Id == gameId);
 
-            if(game == null)
+            if (game == null)
                 throw new EntityNotFound($"Game not found by id : {gameId}");
 
             return _gameMapper.ToResponse(game);
