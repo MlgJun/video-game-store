@@ -29,7 +29,7 @@ namespace VideoGameStore.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult> GetGames([FromBody] Pageable pageable, [FromQuery] FilterRequest filter)
+        public async Task<ActionResult> GetGames([FromQuery] Pageable pageable, [FromQuery] FilterRequest filter)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -44,8 +44,8 @@ namespace VideoGameStore.Controllers
         [Authorize(Roles = "Seller")]
         public async Task<ActionResult> DeleteGame(long id)
         {
-            var seller = GetCurrentDomainUserAsync();
-            
+            var seller = await GetCurrentDomainUserAsync();
+
             await _gameService.Delete(id, seller.Id);
             return NoContent();
         }
@@ -57,7 +57,7 @@ namespace VideoGameStore.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var seller = GetCurrentDomainUserAsync();
+            var seller = await GetCurrentDomainUserAsync();
 
             return Ok(await _gameService.Update(id, seller.Id, gameRequest));
         }
