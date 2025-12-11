@@ -27,6 +27,19 @@ namespace VideoGameStore.Controllers
             return Ok(await _gameService.FindById(id));
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> GetGames([FromBody] Pageable pageable, [FromQuery] FilterRequest filter)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (filter != null)
+                return Ok(await _gameService.FindAllByFilter(pageable, filter));
+            else
+                return Ok(await _gameService.FindAll(pageable));
+        }
+
         [HttpDelete("{id}")]
         [Authorize(Roles = "Seller")]
         public async Task<ActionResult> DeleteGame(long id)
@@ -40,9 +53,7 @@ namespace VideoGameStore.Controllers
         public async Task<ActionResult> UpdateGame(long id, [FromBody] GameRequest gameRequest)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             return Ok(await _gameService.Update(id, gameRequest));
         }
@@ -52,12 +63,9 @@ namespace VideoGameStore.Controllers
         public async Task<ActionResult> CreateGame([FromBody] GameRequest gameRequest)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             return Ok(await _gameService.Create(gameRequest));
         }
-
     }
 }
