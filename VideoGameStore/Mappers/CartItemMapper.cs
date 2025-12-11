@@ -7,7 +7,7 @@ namespace VideoGameStore.Mappers
     {
         public CartItemResponse ToResponse(CartItem cartItem) 
         {
-            return new CartItemResponse(cartItem.Game.Title, cartItem.Quantity);
+            return new CartItemResponse(cartItem.Game.Id, cartItem.Game.Title, cartItem.Quantity);
         }
 
         public CartItem ToEntity(CartItemRequest cartItemRequest, Game game)

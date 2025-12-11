@@ -22,7 +22,7 @@ namespace VideoGameStore.Controllers
 
         [HttpDelete("items")]
         [Authorize(Roles = "Customer")]
-        public async Task<ActionResult> DeleteItems([FromQuery] CartItemRequest cartItemRequest)
+        public async Task<ActionResult> DeleteItems([FromBody] CartItemRequest cartItemRequest)
         {
             if (!ModelState.IsValid)
             {
@@ -31,7 +31,7 @@ namespace VideoGameStore.Controllers
 
             var user = await GetCurrentDomainUserAsync();
 
-            return Ok(_cartService.RemoveFromCart(((Customer)user).Cart.Id, cartItemRequest));
+            return Ok(await _cartService.RemoveFromCart(((Customer)user).Cart.Id, cartItemRequest));
         }
 
 
@@ -46,7 +46,7 @@ namespace VideoGameStore.Controllers
 
             var user = await GetCurrentDomainUserAsync();
 
-            return Ok(_cartService.AddToCart(((Customer)user).Cart.Id, cartItemRequest));
+            return Ok(await _cartService.AddToCart(((Customer)user).Cart.Id, cartItemRequest));
         }
     }
 }

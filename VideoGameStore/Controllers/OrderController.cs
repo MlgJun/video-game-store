@@ -21,16 +21,16 @@ namespace VideoGameStore.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Customer")]
-        public async Task<ActionResult<Page<OrderResponse>>> GetPageOrders([FromQuery]Pageable pageable)
+        public async Task<ActionResult<Page<OrderResponse>>> GetPageOrders([FromQuery] Pageable pageable)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = GetCurrentDomainUserAsync();
+            var user = await GetCurrentDomainUserAsync();
 
-            return Ok(_orderService.FindAllByUserId(user.Id, pageable));
+            return Ok(await _orderService.FindAllByUserId(user.Id, pageable));
         }
 
         [HttpPost]
@@ -44,8 +44,7 @@ namespace VideoGameStore.Controllers
 
             var user = await GetCurrentDomainUserAsync();
 
-            return StatusCode( 201, _orderService.Create(user.Id, order));
+            return StatusCode(201, await _orderService.Create(user.Id, order));
         }
-
     }
 }
