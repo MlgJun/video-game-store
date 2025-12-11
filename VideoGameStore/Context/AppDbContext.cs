@@ -1,12 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VideoGameStore.Entities;
 
 namespace VideoGameStore.Context
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<AspNetUser, IdentityRole<long>, long>
     {
-        public DbSet<User> Users { get; set; } = null!;
+        public DbSet<Seller> Sellers { get; set; } = null!;
+        public DbSet<Customer> Customers { get; set; } = null!;
         public DbSet<Game> Games { get; set; } = null!;
         public DbSet<Order> Orders { get; set; } = null!;
         public DbSet<Cart> Carts { get; set; } = null!;
@@ -19,22 +22,9 @@ namespace VideoGameStore.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Game>()
-                .Property(g => g.Price)
-                .HasColumnType("decimal(10,2)");
+            base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Order>()
-                .Property(o => o.TotalAmount)
-                .HasColumnType("decimal(12,2)");
-
-            modelBuilder.Entity<OrderItem>()
-                .Property(oi => oi.Price)
-                .HasColumnType("decimal(10,2)");
-
-            modelBuilder.Entity<User>()
-                .Property(u => u.Role)
-                .HasConversion(new EnumToStringConverter<UserRole>());
-
+            //USER
             modelBuilder.Entity<User>().UseTpcMappingStrategy();
 
             modelBuilder.Entity<Customer>().ToTable("Customers");
@@ -46,6 +36,21 @@ namespace VideoGameStore.Context
 
             modelBuilder.Entity<Seller>().ToTable("Sellers");
 
+            //GAME
+            modelBuilder.Entity<Game>()
+               .Property(g => g.Price)
+               .HasColumnType("decimal(10,2)");
+
+            //ORDER
+            modelBuilder.Entity<Order>()
+                .Property(o => o.TotalAmount)
+                .HasColumnType("decimal(12,2)");
+
+            modelBuilder.Entity<OrderItem>()
+                .Property(oi => oi.Price)
+                .HasColumnType("decimal(10,2)");
+
+            //CART
             modelBuilder.Entity<Cart>()
                 .HasMany(c => c.CartItems)
                 .WithOne(c => c.Cart)

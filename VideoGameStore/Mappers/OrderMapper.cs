@@ -14,7 +14,7 @@ namespace VideoGameStore.Mappers
 
         public OrderResponse ToResponse(Order order)
         {
-            return new OrderResponse(_orderItemMapper.ToResponseList(order.OrderItems), order.TotalAmount);
+            return new OrderResponse(_orderItemMapper.ToResponseList(order.OrderItems), order.TotalAmount, DateTime.Now);
         }
 
         public Order ToEntity(OrderRequest orderRequest, Customer customer, List<Game> games, decimal totalAmount)

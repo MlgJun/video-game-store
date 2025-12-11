@@ -12,19 +12,20 @@ namespace VideoGameStore.Mappers
             _cartMapper = cartMapper;
         }
 
-        public CustomerResponse ToResponse(Customer customer)
+        public CustomerResponse ToResponse(Customer customer, AspNetUser user)
         {
-            return new CustomerResponse(customer.Id,customer.Login, _cartMapper.ToResponse(customer.Cart));
+            return new CustomerResponse(customer.Id, user.UserName, user.Email, _cartMapper.ToResponse(customer.Cart));
         }
 
-        public Customer ToEntity(UserRequest customerRequest, Cart cart, string password)
+        public Customer ToEntity(UserRequest customerRequest, Cart cart)
         {
-            var customer = new Customer();
+            var customer = new Customer
+            {
+                Cart = cart,
+                CreatedAt = DateTime.UtcNow
+            };
 
-            customer.Login = customerRequest.Login;
-            customer.Password = password;
-            customer.Cart = cart;
-            customer.Role = customerRequest.UserRole;
+            cart.Customer = customer;
 
             return customer;
         }

@@ -7,7 +7,7 @@ namespace VideoGameStore.Mappers
     {
         public GameResponse ToResponse(Game game)
         {
-            return new GameResponse(game.Id, game.PublisherTitle, game.DeveloperTitle, game.Price, game.Title ,game.Description);
+            return new GameResponse(game.Id, game.PublisherTitle, game.DeveloperTitle, game.Price, game.Title, game.Description, DateTime.Now);
         }
         
         public Game ToEntity(GameRequest gameRequest)
