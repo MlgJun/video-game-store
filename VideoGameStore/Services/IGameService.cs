@@ -5,7 +5,7 @@ namespace VideoGameStore.Services
     public interface IGameService
     {
         public Task<GameResponse> FindById(long gameId);
-        public Task<Page<GameResponse>> FindAll();
+        public Task<Page<GameResponse>> FindAll(Pageable pageable);
         /// <summary>
         /// Найти все игры продавца
         /// </summary>
