@@ -17,7 +17,7 @@ namespace VideoGameStore.Services
         /// <param name="cartId"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        public Task<CartResponse> RemoveFromCart(long cartId, CartItemRequest request);
+        public Task<CartResponse> RemoveFromCart(long cartId, long itemId);
         public Task Clear(long cartId);
     }
 }
