@@ -1,8 +1,7 @@
 ﻿namespace VideoGameStore.Entities
 {
-    public class Game
+    public class Game : BaseEntity
     {
-        public long Id { get; set; }
         public string DeveloperTitle { get; set; } = null!;
         public string PublisherTitle { get; set; } = null!;
         public decimal Price { get; set; }

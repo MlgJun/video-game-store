@@ -3,6 +3,6 @@
     public class Customer : User
     {
         public virtual Cart Cart { get; set; } = null!;
-        public virtual List<Order>? Orders { get; set; }
+        public virtual List<Order> Orders { get; set; } = new();
     }
 }

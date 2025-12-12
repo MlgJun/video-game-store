@@ -1,8 +1,7 @@
 ﻿namespace VideoGameStore.Entities
 {
-    public abstract class User
+    public abstract class User : BaseEntity
     {
-        public long Id { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }
