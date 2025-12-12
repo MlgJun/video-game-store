@@ -38,14 +38,14 @@ namespace VideoGameStore.Services
             {
                 Cart cart = new Cart();
                 Customer customer = _customerMapper.ToEntity(request, cart);
-               
+
                 await _context.Customers.AddAsync(customer);
-                await _context.Carts.AddAsync(cart); 
-                
+                await _context.Carts.AddAsync(cart);
+
                 await _context.SaveChangesAsync();
-                
+
                 AspNetUser user = await CreateIdentity(request, customer, "Customer");
-                
+
                 await transaction.CommitAsync();
 
                 _logger.LogDebug($"Customer created with email and username: {request.Email}, {request.Username}");
@@ -74,7 +74,6 @@ namespace VideoGameStore.Services
                 Seller seller = _sellerMapper.ToEntity(request);
 
                 await _context.Sellers.AddAsync(seller);
-
                 await _context.SaveChangesAsync();
 
                 AspNetUser user = await CreateIdentity(request, seller, "Seller");
@@ -108,12 +107,12 @@ namespace VideoGameStore.Services
                 string errors = string.Join(",", result.Errors.Select(e => e.Description));
                 throw new InvalidOperationException($"Failed to create {role} : {errors}");
             }
-            else
-            {
-                await _userManager.AddClaimAsync(aspNetUser, new Claim("UserId", user.Id.ToString()));
-                await _userManager.AddToRoleAsync(aspNetUser, role);
-                return aspNetUser;
-            }
+
+            await _userManager.AddClaimAsync(aspNetUser, new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+            await _userManager.AddClaimAsync(aspNetUser, new Claim(ClaimTypes.Role, role));
+            await _userManager.AddToRoleAsync(aspNetUser, role);
+
+            return aspNetUser;
         }
     }
 }
