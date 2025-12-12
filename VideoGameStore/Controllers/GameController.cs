@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using VideoGameStore.Context;
 using VideoGameStore.Dtos;
 using VideoGameStore.Entities;
@@ -18,7 +19,6 @@ namespace VideoGameStore.Controllers
         {
             _gameService = gameService;
         }
-
 
         [HttpGet("{id}")]
         [AllowAnonymous]
@@ -38,6 +38,15 @@ namespace VideoGameStore.Controllers
                 return Ok(await _gameService.FindAllByFilter(pageable, filter));
             else
                 return Ok(await _gameService.FindAll(pageable));
+        }
+
+        [HttpGet("my")]
+        [Authorize(Roles = "Seller")]
+        public async Task<ActionResult> GetMyGames([FromQuery] Pageable pageable)
+        {
+            var seller = await GetCurrentDomainUserAsync();
+
+            return Ok(await _gameService.FindAllBySellerId(seller.Id, pageable));
         }
 
         [HttpDelete("{id}")]

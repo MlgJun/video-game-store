@@ -21,15 +21,16 @@ namespace VideoGameStore.Controllers
         protected async Task<User> GetCurrentDomainUserAsync()
         {
             long identityUserId = long.Parse(
-                User.FindFirst("UserId")?.Value
+                User.FindFirstValue(ClaimTypes.NameIdentifier)
                 ?? throw new UnauthorizedAccessException("User not authenticated"));
 
-            var role = User.FindFirst(ClaimTypes.Role)?.Value
-                      ?? throw new UnauthorizedAccessException();
+            var role = User.FindFirstValue(ClaimTypes.Role)
+                      ?? throw new UnauthorizedAccessException("User not authenticated");
 
             return role switch
             {
                 "Customer" => await _dbContext.Customers
+                    .Include(c => c.Cart)
                     .FirstOrDefaultAsync(c => c.Id == identityUserId)
                     ?? throw new KeyNotFoundException(),
 
