@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VideoGameStore.Entities;
 
 namespace VideoGameStore.Context
@@ -27,31 +26,38 @@ namespace VideoGameStore.Context
             //USER
             modelBuilder.Entity<User>().UseTpcMappingStrategy();
 
-            modelBuilder.Entity<Customer>().ToTable("Customers");
-
             modelBuilder.Entity<Customer>()
+                .ToTable("Customers")
                 .HasOne(c => c.Cart)
                 .WithOne(c => c.Customer)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Seller>().ToTable("Sellers");
+            modelBuilder.Entity<Seller>()
+                .ToTable("Sellers")
+                .HasMany(s => s.Games)
+                .WithOne(g => g.Seller)
+                .OnDelete(DeleteBehavior.Cascade);
 
             //GAME
             modelBuilder.Entity<Game>()
+               .ToTable("Games")
                .Property(g => g.Price)
                .HasColumnType("decimal(10,2)");
 
             //ORDER
             modelBuilder.Entity<Order>()
+                .ToTable("Orders")
                 .Property(o => o.TotalAmount)
                 .HasColumnType("decimal(12,2)");
 
             modelBuilder.Entity<OrderItem>()
+                .ToTable("OrderItems")
                 .Property(oi => oi.Price)
                 .HasColumnType("decimal(10,2)");
 
             //CART
             modelBuilder.Entity<Cart>()
+                .ToTable("Carts")
                 .HasMany(c => c.CartItems)
                 .WithOne(c => c.Cart)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -60,7 +66,14 @@ namespace VideoGameStore.Context
                 .HasIndex(c => c.CustomerId)
                 .IsUnique();
 
-            modelBuilder.Entity<CartItem>().HasIndex(ci => ci.CartId);
+            modelBuilder.Entity<CartItem>()
+                .ToTable("CartItmes");
+
+            modelBuilder.Entity<CartItem>()
+                .HasIndex(ci => ci.CartId);
+
+            modelBuilder.Entity<CartItem>()
+                .HasIndex(ci => ci.Game.Id);
         }
     }
 }
