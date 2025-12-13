@@ -9,5 +9,6 @@
         public string? Description { get; set; }
         public DateTime CreatedAt { get; set; }
         public Seller Seller { get; set; } = null!;
+        public List<Genre> Genres { get; set; } = new();
     }
 }

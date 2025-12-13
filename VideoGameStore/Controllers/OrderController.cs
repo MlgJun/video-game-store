@@ -30,7 +30,7 @@ namespace VideoGameStore.Controllers
 
             var user = await GetCurrentDomainUserAsync();
 
-            return Ok(await _orderService.FindAllByUserId(user.Id, pageable));
+            return Ok(await _orderService.FindAllByCustomerId(user.Id, pageable));
         }
 
         [HttpPost]
@@ -42,9 +42,9 @@ namespace VideoGameStore.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await GetCurrentDomainUserAsync();
+            Customer customer = (Customer)await GetCurrentDomainUserAsync();
 
-            return StatusCode(201, await _orderService.Create(user.Id, order));
+            return StatusCode(201, await _orderService.Create(customer, order));
         }
     }
 }

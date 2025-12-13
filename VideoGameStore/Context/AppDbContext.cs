@@ -14,6 +14,7 @@ namespace VideoGameStore.Context
         public DbSet<Cart> Carts { get; set; } = null!;
         public DbSet<OrderItem> OrderItems { get; set; } = null!;
         public DbSet<CartItem> CartItems { get; set; } = null!;
+        public DbSet<Genre> Genres { get; set; } = null!;
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -44,6 +45,13 @@ namespace VideoGameStore.Context
                .Property(g => g.Price)
                .HasColumnType("decimal(10,2)");
 
+            //GENRE
+            modelBuilder.Entity<Genre>()
+                .ToTable("Genres")
+                .HasMany(g => g.Games)
+                .WithMany(g => g.Genres)
+                .UsingEntity(e => e.ToTable("GameGenres"));
+
             //ORDER
             modelBuilder.Entity<Order>()
                 .ToTable("Orders")
@@ -67,13 +75,13 @@ namespace VideoGameStore.Context
                 .IsUnique();
 
             modelBuilder.Entity<CartItem>()
-                .ToTable("CartItmes");
+                .ToTable("CartItems");
 
             modelBuilder.Entity<CartItem>()
                 .HasIndex(ci => ci.CartId);
 
             modelBuilder.Entity<CartItem>()
-                .HasIndex(ci => ci.Game.Id);
+                .HasIndex(ci => ci.GameId);
         }
     }
 }

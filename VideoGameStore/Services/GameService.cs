@@ -62,10 +62,11 @@ namespace VideoGameStore.Services
                 predicates.Add(g => g.Price >= filter.MaxPrice);
 
             if (!filter.GameTitle.IsNullOrEmpty())
-                predicates.Add(p => p.Title.Contains(filter.GameTitle));
+                predicates.Add(g => g.Title.Contains(filter.GameTitle));
 
-            //if (!filter.Genres.IsNullOrEmpty())
-            //    predicates.Add(p => p.Title.Contains(filter.GameTitle));
+            if (!filter.Genres.IsNullOrEmpty())
+                foreach (var genre in filter.Genres)
+                    predicates.Add(g => g.Title.Contains(genre));
 
             return await _context.Games.ToPageAsync(pageable, g => _gameMapper.ToResponse(g), predicates);
         }
