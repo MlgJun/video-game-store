@@ -15,6 +15,7 @@ namespace VideoGameStore.Context
         public DbSet<OrderItem> OrderItems { get; set; } = null!;
         public DbSet<CartItem> CartItems { get; set; } = null!;
         public DbSet<Genre> Genres { get; set; } = null!;
+        public DbSet<Key> Keys { get; set; } = null!;
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -44,6 +45,22 @@ namespace VideoGameStore.Context
                .ToTable("Games")
                .Property(g => g.Price)
                .HasColumnType("decimal(10,2)");
+
+            modelBuilder.Entity<Game>()
+                .HasMany(g => g.Keys)
+                .WithOne(k => k.Game)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Game>()
+                .HasOne(g => g.Seller)
+                .WithMany(s => s.Games);
+
+            //Keys
+            modelBuilder.Entity<Key>()
+                .ToTable("Keys")
+                .HasOne(k => k.Game)
+                .WithMany(g => g.Keys);
+
 
             //GENRE
             modelBuilder.Entity<Genre>()

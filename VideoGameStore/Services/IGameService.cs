@@ -12,7 +12,7 @@ namespace VideoGameStore.Services
         /// </summary>
         /// <param name="sellerId"></param>
         /// <returns></returns>
-        public Task<Page<GameResponse>> FindAllBySellerId(long sellerId, Pageable pageable);
+        public Task<Page<SellerGameResponse>> FindAllBySellerId(long sellerId, Pageable pageable);
         public Task<GameResponse> Create(GameRequest request);
         public Task<GameResponse> Update(long gameId, long sellerId, GameRequest request);
         public Task<bool> Delete(long gameId, long sellerId);

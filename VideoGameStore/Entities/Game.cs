@@ -10,5 +10,6 @@
         public DateTime CreatedAt { get; set; }
         public Seller Seller { get; set; } = null!;
         public List<Genre> Genres { get; set; } = new();
+        public List<Key> Keys { get; set; } = new();
     }
 }

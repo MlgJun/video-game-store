@@ -1,4 +1,5 @@
-﻿using VideoGameStore.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using VideoGameStore.Context;
 using VideoGameStore.Dtos;
 using VideoGameStore.Entities;
 using VideoGameStore.Exceptions;
@@ -20,22 +21,26 @@ namespace VideoGameStore.Services
 
         public async Task<OrderResponse> Create(Customer customer, OrderRequest request)
         {
-            List<long> ids = request.OrderItems.Select(item => item.GameId).ToList();
-            List<Game> games = _context.Games.Where(g => ids.Contains(g.Id)).ToList();
-
-            if (games.Count != ids.Count)
+            List<long> gameIds = request.OrderItems.Select(item => item.GameId).ToList();
+            List<Game> games = _context.Games.Where(g => gameIds.Contains(g.Id)).ToList();  
+            
+            if (games.Count != gameIds.Count)
                 throw new EntityNotFound("Some game not found");
+
+            Queue<string> queue = DeleteKeys(gameIds);
 
             decimal totalAmount = 0;
 
-            foreach (var game in games) 
+            foreach (var game in games)
             {
                 totalAmount += game.Price;
             }
 
-            Order order = _mapper.ToEntity(request, customer, games, totalAmount);
+            Order order = _mapper.ToEntity(request, customer, games, totalAmount, queue);
 
             await _context.Orders.AddAsync(order);
+
+            await _context.SaveChangesAsync();
 
             return _mapper.ToResponse(order);
         }
@@ -44,6 +49,16 @@ namespace VideoGameStore.Services
         {
             return await _context.Orders.ToPageAsync(pageable, order => _mapper.ToResponse(order),
                 new List<Predicate<Order>> { o => o.Customer.Id == customerId });
+        } 
+
+        private Queue<string> DeleteKeys(List<long> gameIds)
+        {
+            List<Key> keys = _context.Keys.Where(k => gameIds.Contains(k.GameId)).ToList();
+
+            Queue<string> queue = new Queue<string>(keys.Select(k => k.Value).ToList());
+
+            _context.Keys.RemoveRange(keys);
+            return queue;
         }
     }
 }

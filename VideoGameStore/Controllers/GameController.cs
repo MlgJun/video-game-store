@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using VideoGameStore.Context;
 using VideoGameStore.Dtos;
 using VideoGameStore.Entities;
@@ -73,7 +72,7 @@ namespace VideoGameStore.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Seller")]
-        public async Task<ActionResult> CreateGame([FromBody] GameRequest gameRequest)
+        public async Task<ActionResult> CreateGame([FromForm] GameRequest gameRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

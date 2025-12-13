@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VideoGameStore.Services;
 
 namespace VideoGameStore.Controllers
@@ -15,6 +16,7 @@ namespace VideoGameStore.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult> GetAll()
         {
             return Ok(await _genreService.FindAll());

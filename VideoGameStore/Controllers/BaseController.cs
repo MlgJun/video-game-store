@@ -31,6 +31,7 @@ namespace VideoGameStore.Controllers
             {
                 "Customer" => await _dbContext.Customers
                     .Include(c => c.Cart)
+                    .ThenInclude(c => c.CartItems)
                     .FirstOrDefaultAsync(c => c.Id == identityUserId)
                     ?? throw new KeyNotFoundException(),
 
