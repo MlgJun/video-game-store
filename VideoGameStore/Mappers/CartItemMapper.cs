@@ -21,14 +21,7 @@ namespace VideoGameStore.Mappers
 
         public List<CartItemResponse> ToResponseList(List<CartItem> listCartItem)
         {
-            List<CartItemResponse> cartItems = [];
-
-            foreach (var i in listCartItem)
-            {
-                cartItems.Add(ToResponse(i));
-            }
-
-            return cartItems;
+            return listCartItem.Select(i => ToResponse(i)).ToList();
         }
 
         public List<CartItem> ToEnitytList(List<CartItemRequest> listCartItem, List<Game> games)

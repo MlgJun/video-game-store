@@ -31,7 +31,7 @@ namespace VideoGameStore.Controllers
 
             var user = await GetCurrentDomainUserAsync();
 
-            return Ok(await _cartService.RemoveFromCart(((Customer)user).Cart.Id, cartItemRequest));
+            return Ok(await _cartService.RemoveFromCart(((Customer)user).Cart, cartItemRequest));
         }
 
 
@@ -46,7 +46,15 @@ namespace VideoGameStore.Controllers
 
             var user = await GetCurrentDomainUserAsync();
 
-            return Ok(await _cartService.AddToCart(((Customer)user).Cart.Id, cartItemRequest));
+            return Ok(await _cartService.AddToCart(((Customer)user).Cart, cartItemRequest));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Customer")]
+        public async Task<ActionResult> GetCart()
+        {
+            var customer = await GetCurrentDomainUserAsync();
+            return Ok(((Customer)customer).Cart);
         }
     }
 }

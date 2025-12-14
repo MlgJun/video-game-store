@@ -2,6 +2,6 @@
 {
     public class Seller : User
     {
-        public virtual List<Game>? Games { get; set; }
+        public virtual List<Game> Games { get; set; } = new();
     }
 }

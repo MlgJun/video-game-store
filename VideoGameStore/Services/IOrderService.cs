@@ -1,10 +1,11 @@
 ﻿using VideoGameStore.Dtos;
+using VideoGameStore.Entities;
 
 namespace VideoGameStore.Services
 {
     public interface IOrderService
     {
-        public Task<Page<OrderResponse>> FindAllByUserId(long userId, Pageable pageable);
-        public Task<OrderResponse> Create(long userId, OrderRequest request);
+        public Task<Page<OrderResponse>> FindAllByCustomerId(long customerId, Pageable pageable);
+        public Task<OrderResponse> Create(Customer customer, OrderRequest request);
     }
 }

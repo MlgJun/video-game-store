@@ -17,11 +17,11 @@ namespace VideoGameStore.Mappers
             return new OrderResponse(_orderItemMapper.ToResponseList(order.OrderItems), order.TotalAmount, DateTime.Now);
         }
 
-        public Order ToEntity(OrderRequest orderRequest, Customer customer, List<Game> games, decimal totalAmount)
+        public Order ToEntity(OrderRequest orderRequest, Customer customer, List<Game> games, decimal totalAmount, Queue<string> keys)
         {
             var entity = new Order();
             entity.Customer = customer;
-            entity.OrderItems = _orderItemMapper.ToEnitytList(orderRequest.OrderItems, games);
+            entity.OrderItems = _orderItemMapper.ToEnitytList(orderRequest.OrderItems, games, keys);
             entity.TotalAmount = totalAmount;
 
             return entity;

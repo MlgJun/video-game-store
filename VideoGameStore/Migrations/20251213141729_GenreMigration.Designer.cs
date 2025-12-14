@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VideoGameStore.Context;
 
@@ -11,9 +12,11 @@ using VideoGameStore.Context;
 namespace VideoGameStore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251213141729_GenreMigration")]
+    partial class GenreMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -341,28 +344,6 @@ namespace VideoGameStore.Migrations
                     b.ToTable("Genres", (string)null);
                 });
 
-            modelBuilder.Entity("VideoGameStore.Entities.Key", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("GameId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GameId");
-
-                    b.ToTable("Keys", (string)null);
-                });
-
             modelBuilder.Entity("VideoGameStore.Entities.Order", b =>
                 {
                     b.Property<long>("Id")
@@ -397,10 +378,6 @@ namespace VideoGameStore.Migrations
 
                     b.Property<long>("GameId")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("OrderId")
                         .HasColumnType("bigint");
@@ -560,17 +537,6 @@ namespace VideoGameStore.Migrations
                     b.Navigation("Seller");
                 });
 
-            modelBuilder.Entity("VideoGameStore.Entities.Key", b =>
-                {
-                    b.HasOne("VideoGameStore.Entities.Game", "Game")
-                        .WithMany("Keys")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Game");
-                });
-
             modelBuilder.Entity("VideoGameStore.Entities.Order", b =>
                 {
                     b.HasOne("VideoGameStore.Entities.Customer", "Customer")
@@ -600,11 +566,6 @@ namespace VideoGameStore.Migrations
             modelBuilder.Entity("VideoGameStore.Entities.Cart", b =>
                 {
                     b.Navigation("CartItems");
-                });
-
-            modelBuilder.Entity("VideoGameStore.Entities.Game", b =>
-                {
-                    b.Navigation("Keys");
                 });
 
             modelBuilder.Entity("VideoGameStore.Entities.Order", b =>

@@ -19,7 +19,6 @@ namespace VideoGameStore.Controllers
             _gameService = gameService;
         }
 
-
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<ActionResult> GetGame(long id)
@@ -38,6 +37,15 @@ namespace VideoGameStore.Controllers
                 return Ok(await _gameService.FindAllByFilter(pageable, filter));
             else
                 return Ok(await _gameService.FindAll(pageable));
+        }
+
+        [HttpGet("my")]
+        [Authorize(Roles = "Seller")]
+        public async Task<ActionResult> GetMyGames([FromQuery] Pageable pageable)
+        {
+            var seller = await GetCurrentDomainUserAsync();
+
+            return Ok(await _gameService.FindAllBySellerId(seller.Id, pageable));
         }
 
         [HttpDelete("{id}")]
@@ -64,12 +72,19 @@ namespace VideoGameStore.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Seller")]
-        public async Task<ActionResult> CreateGame([FromBody] GameRequest gameRequest)
+        public async Task<ActionResult> CreateGame([FromForm] GameWithKeysRequest gameRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(await _gameService.Create(gameRequest));
+        }
+
+        [HttpPost("{id}")]
+        [Authorize(Roles = "Seller")]
+        public async Task<ActionResult> AddKeys(long id, IFormFile keys)
+        {
+            return Ok(await _gameService.AddKeys(id, keys));
         }
     }
 }
