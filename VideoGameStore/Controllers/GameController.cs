@@ -80,7 +80,7 @@ namespace VideoGameStore.Controllers
             return Ok(await _gameService.Create(gameRequest));
         }
 
-        [HttpPost("{id}")]
+        [HttpPost("{id}/keys")]
         [Authorize(Roles = "Seller")]
         public async Task<ActionResult> AddKeys(long id, IFormFile keys)
         {
