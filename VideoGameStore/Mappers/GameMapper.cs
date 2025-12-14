@@ -1,4 +1,5 @@
-﻿using VideoGameStore.Dtos;
+﻿using VideoGameStore.Controllers;
+using VideoGameStore.Dtos;
 using VideoGameStore.Entities;
 
 namespace VideoGameStore.Mappers
@@ -23,7 +24,7 @@ namespace VideoGameStore.Mappers
             return new SellerGameResponse(game.Id, game.Title, game.Price, game.Keys.Select(k => k.Value).ToList());
         }
 
-        public Game ToEntity(GameRequest gameRequest)
+        public Game ToEntity(GameWithKeysRequest gameRequest)
         {
             var game = new Game();
 

@@ -72,12 +72,19 @@ namespace VideoGameStore.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Seller")]
-        public async Task<ActionResult> CreateGame([FromForm] GameRequest gameRequest)
+        public async Task<ActionResult> CreateGame([FromForm] GameWithKeysRequest gameRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(await _gameService.Create(gameRequest));
+        }
+
+        [HttpPost("{id}")]
+        [Authorize(Roles = "Seller")]
+        public async Task<ActionResult> AddKeys(long id, IFormFile keys)
+        {
+            return Ok(await _gameService.AddKeys(id, keys));
         }
     }
 }

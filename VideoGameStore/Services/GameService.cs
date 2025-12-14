@@ -22,7 +22,7 @@ namespace VideoGameStore.Services
             _keyService = keyService;
         }
 
-        public async Task<GameResponse> Create(GameRequest request)
+        public async Task<GameResponse> Create(GameWithKeysRequest request)
         {
             Game game = _gameMapper.ToEntity(request);
 
@@ -33,6 +33,19 @@ namespace VideoGameStore.Services
             await _context.SaveChangesAsync();
 
             return _gameMapper.ToResponse(game);
+        }
+
+        public async Task<GameResponse> AddKeys(long gameId, IFormFile keys)
+        {
+            Game? game = await _context.Games.FirstOrDefaultAsync(g => g.Id == gameId);
+
+            if (game == null)
+                throw new EntityNotFound($"Game not found by id : {gameId}");
+
+            await _keyService.CreateKeysAsync(keys, game);
+
+            return _gameMapper.ToResponse(game);
+
         }
 
         public async Task<bool> Delete(long gameId, long sellerId)

@@ -10,9 +10,11 @@ services:
       - "1433:1433"
     volumes:
       - sqlserver_data:/var/opt/mssql
-      - ./init-scripts:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"Password1234@!\" -Q \"SELECT 1\" -C -b -o /dev/null || exit 1"]
+      test: [
+        "CMD-SHELL",
+        "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"Password1234@!\" -Q \"SELECT 1\" -C -b -o /dev/null || exit 1"
+      ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -26,7 +28,7 @@ services:
     ports:
       - "8080:80"
     environment:
-      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=GameStore;User Id=sa;Password=Password1234@!;TrustServerCertificate=True;"
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=VideoGameStoreDb;User Id=sa;Password=Password1234@!;TrustServerCertificate=True;"
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: "http://+:80"
     depends_on:
