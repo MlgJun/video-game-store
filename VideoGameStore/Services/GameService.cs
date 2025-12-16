@@ -22,11 +22,11 @@ namespace VideoGameStore.Services
             _keyService = keyService;
         }
 
-        public async Task<GameResponse> Create(GameWithKeysRequest request)
+        public async Task<GameResponse> Create(GameWithKeysRequest request, Seller seller)
         {
-            Game game = _gameMapper.ToEntity(request);
+            Game game = _gameMapper.ToEntity(request, seller);
 
-            List<Key> keys = await _keyService.CreateKeysAsync(request.Keys, game);
+            List<Key> keys = await _keyService.CreateKeysAsync(request.File, game);
 
             await _context.Games.AddAsync(game);
             await _context.Keys.AddRangeAsync(keys);

@@ -14,7 +14,8 @@ namespace VideoGameStore.Controllers
     {
         private readonly IOrderService _orderService;
 
-        public OrderController(IOrderService orderService, AppDbContext dbContext, UserManager<AspNetUser> userManager) : base(dbContext, userManager)
+        public OrderController(IOrderService orderService, AppDbContext dbContext, UserManager<AspNetUser> userManager, ILogger<OrderController> logger) 
+            : base(dbContext, userManager, logger)
         {
             _orderService = orderService;
         }

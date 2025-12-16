@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using VideoGameStore.Context;
@@ -16,7 +17,7 @@ namespace VideoGameStore.Controllers
         private readonly SignInManager<AspNetUser> _signInManager;
 
         public AuthController(AppDbContext dbContext, UserManager<AspNetUser> userManager,
-            SignInManager<AspNetUser> signInManager, IUserService userService) : base(dbContext, userManager)
+            SignInManager<AspNetUser> signInManager, IUserService userService, ILogger<AuthController> logger) : base(dbContext, userManager, logger)
         {
             _userService = userService;
             _signInManager = signInManager;
@@ -44,12 +45,21 @@ namespace VideoGameStore.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _signInManager.PasswordSignInAsync(request.Username, request.Password, isPersistent: true, lockoutOnFailure: false);
+            var user = await _userManager.FindByNameAsync(request.Username);
+            if (user == null)
+                return Unauthorized("Invalid login or password");
+
+            var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: false);
 
             if (!result.Succeeded)
-            {
                 return Unauthorized("Invalid login or password");
-            }
+
+            var principal = await _signInManager.CreateUserPrincipalAsync(user);
+
+            await HttpContext.SignInAsync(
+                IdentityConstants.ApplicationScheme,
+                principal,
+                new AuthenticationProperties { IsPersistent = true });
 
             return Ok(new { message = "Login successful" });
         }

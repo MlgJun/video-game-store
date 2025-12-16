@@ -11,11 +11,13 @@ namespace VideoGameStore.Controllers
     {
         protected readonly AppDbContext _dbContext;
         protected readonly UserManager<AspNetUser> _userManager;
+        protected readonly ILogger<BaseController> _logger;
 
-        protected BaseController(AppDbContext dbContext, UserManager<AspNetUser> userManager)
+        protected BaseController(AppDbContext dbContext, UserManager<AspNetUser> userManager, ILogger<BaseController> logger)
         {
             _dbContext = dbContext;
             _userManager = userManager;
+            _logger = logger;
         }
 
         protected async Task<User> GetCurrentDomainUserAsync()
@@ -23,6 +25,8 @@ namespace VideoGameStore.Controllers
             long identityUserId = long.Parse(
                 User.FindFirstValue(ClaimTypes.NameIdentifier)
                 ?? throw new UnauthorizedAccessException("User not authenticated"));
+
+            _logger.LogDebug($"Identity id :{User.FindFirstValue(ClaimTypes.NameIdentifier)})");
 
             var role = User.FindFirstValue(ClaimTypes.Role)
                       ?? throw new UnauthorizedAccessException("User not authenticated");

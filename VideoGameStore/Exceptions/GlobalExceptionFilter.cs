@@ -20,6 +20,7 @@ namespace VideoGameStore.Exceptions
             {
                 EntityNotFound => new ApiErrorResponse(404, context.Exception.Message),
                 BadRequest => new ApiErrorResponse(400, context.Exception.Message),
+                InvalidOperationException => new ApiErrorResponse(400, context.Exception.Message),
                 UnauthorizedAccessException => new ApiErrorResponse(401, context.Exception.Message),
                 _ => new ApiErrorResponse(500, $"Internal server error: {context.Exception.Message}")
             };

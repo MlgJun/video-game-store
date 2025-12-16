@@ -5,6 +5,10 @@ using VideoGameStore.Entities;
 using VideoGameStore.Services;
 using VideoGameStore.Mappers;
 using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc.Filters;
+using VideoGameStore.Exceptions;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 public class Program
 {
@@ -12,13 +16,25 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers(options =>
+        {
+            options.Filters.Add<GlobalExceptionFilter>();
+        });
+
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "VideoGameStore API",
+                Version = "v1"
+            });
+        });
+
 
         builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(
-                builder.Configuration.GetConnectionString("DefaultConnection")
+                builder.Configuration.GetConnectionString("LocalConnection")
             ));
 
         builder.Services.AddIdentity<AspNetUser, IdentityRole<long>>(options =>
@@ -29,7 +45,19 @@ public class Program
             .AddRoles<IdentityRole<long>>()
             .AddEntityFrameworkStores<AppDbContext>();
 
-        builder.Services.AddAuthentication();
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.Events.OnRedirectToLogin = context =>
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Task.CompletedTask;
+            };
+            options.Events.OnRedirectToAccessDenied = context =>
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                return Task.CompletedTask;
+            };
+        });
 
         builder.Services.AddAuthorization(options =>
         {
@@ -41,6 +69,7 @@ public class Program
         });
 
         builder.Services.AddScoped<SellerMapper>();
+        builder.Services.AddScoped<GlobalExceptionFilter>();
         builder.Services.AddScoped<CustomerMapper>();
         builder.Services.AddScoped<CartMapper>();
         builder.Services.AddScoped<GameMapper>();
@@ -59,81 +88,88 @@ public class Program
 
         var app = builder.Build();
 
-        using (var scope = app.Services.CreateScope())
+        if (!app.Environment.IsEnvironment("Testing"))
         {
-            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-            var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            try
+            using (var scope = app.Services.CreateScope())
             {
-                var connString = configuration.GetConnectionString("DefaultConnection");
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
 
-                var builder2 = new SqlConnectionStringBuilder(connString)
+                try
                 {
-                    InitialCatalog = "master"
-                };
+                    var connString = configuration.GetConnectionString("LocalConnection");
 
-                using (var conn = new SqlConnection(builder2.ConnectionString))
-                {
-                    await conn.OpenAsync();
-                    using var cmd = conn.CreateCommand();
+                    var builder2 = new SqlConnectionStringBuilder(connString)
+                    {
+                        InitialCatalog = "master"
+                    };
 
-                    cmd.CommandText = @"IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = N'VideoGameStoreDb')
+                    using (var conn = new SqlConnection(builder2.ConnectionString))
+                    {
+                        await conn.OpenAsync();
+                        using var cmd = conn.CreateCommand();
+
+                        cmd.CommandText = @"IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = N'VideoGameStoreDb')
                         BEGIN
                             CREATE DATABASE [VideoGameStoreDb];
                         END";
-                    await cmd.ExecuteNonQueryAsync();
-                    logger.LogInformation("Database created or already exists");
-                }
+                        await cmd.ExecuteNonQueryAsync();
+                        logger.LogInformation("Database created or already exists");
+                    }
 
-                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                await db.Database.MigrateAsync();
-                logger.LogInformation("Migrations applied");
+                    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                    await db.Database.MigrateAsync();
+                    logger.LogInformation("Migrations applied");
 
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<long>>>();
-                var roles = new[] { "Seller", "Customer" };
+                    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<long>>>();
+                    var roles = new[] { "Seller", "Customer" };
 
-                foreach (var role in roles)
-                {
-                    if (!await roleManager.RoleExistsAsync(role))
+                    foreach (var role in roles)
                     {
-                        await roleManager.CreateAsync(new IdentityRole<long> { Name = role });
-                        logger.LogInformation($"Role '{role}' created");
+                        if (!await roleManager.RoleExistsAsync(role))
+                        {
+                            await roleManager.CreateAsync(new IdentityRole<long> { Name = role });
+                            logger.LogInformation($"Role '{role}' created");
+                        }
+                    }
+
+                    var initSqlPath = Path.Combine(AppContext.BaseDirectory, "Sql", "init-db.sql");
+                    if (File.Exists(initSqlPath))
+                    {
+                        var initSql = await File.ReadAllTextAsync(initSqlPath);
+                        if (!string.IsNullOrWhiteSpace(initSql))
+                        {
+                            await db.Database.ExecuteSqlRawAsync(initSql);
+                            logger.LogInformation("Init data loaded");
+                        }
+                    }
+                    else
+                    {
+                        logger.LogWarning($"Init SQL file not found: {initSqlPath}");
                     }
                 }
-
-                var initSqlPath = Path.Combine(AppContext.BaseDirectory, "Sql", "init-db.sql");
-                if (File.Exists(initSqlPath))
+                catch (Exception ex)
                 {
-                    var initSql = await File.ReadAllTextAsync(initSqlPath);
-                    if (!string.IsNullOrWhiteSpace(initSql))
-                    {
-                        await db.Database.ExecuteSqlRawAsync(initSql);
-                        logger.LogInformation("Init data loaded");
-                    }
+                    logger.LogError(ex, "Error during database initialization");
+                    throw;
                 }
-                else
-                {
-                    logger.LogWarning($"Init SQL file not found: {initSqlPath}");
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Error during database initialization");
-                throw;
             }
         }
+
 
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "VideoGameStore v1");
+            });
         }
 
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
-        app.MapControllers();   
+        app.MapControllers();
 
         await app.RunAsync();
     }

@@ -25,7 +25,7 @@ namespace VideoGameStore.Services
 
             string[]? keys = JsonSerializer.Deserialize<string[]>(jsonString);
 
-            if (keys == null || keys.Length > 0)
+            if (keys == null || keys.Length == 0)
                 throw new BadRequest("File doesn't contain keys");
 
             return _mapper.ToEntityList(keys, game);
