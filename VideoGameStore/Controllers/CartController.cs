@@ -14,7 +14,8 @@ namespace VideoGameStore.Controllers
     {
         private readonly ICartService _cartService;
 
-        public CartController(ICartService cartService, AppDbContext dbContext, UserManager<AspNetUser> userManager) : base(dbContext, userManager)
+        public CartController(ICartService cartService, AppDbContext dbContext, UserManager<AspNetUser> userManager, ILogger<CartController> logger) 
+            : base(dbContext, userManager, logger)
         {
             _cartService = cartService;
         }

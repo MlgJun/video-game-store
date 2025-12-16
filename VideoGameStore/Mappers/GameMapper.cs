@@ -24,7 +24,7 @@ namespace VideoGameStore.Mappers
             return new SellerGameResponse(game.Id, game.Title, game.Price, game.Keys.Select(k => k.Value).ToList());
         }
 
-        public Game ToEntity(GameWithKeysRequest gameRequest)
+        public Game ToEntity(GameWithKeysRequest gameRequest, Seller seller)
         {
             var game = new Game();
 
@@ -34,6 +34,7 @@ namespace VideoGameStore.Mappers
             game.Title = gameRequest.Title;
             game.Description = gameRequest.Description;
             game.Genres = _genreMapper.ToEntityList(gameRequest.Genres);
+            game.Seller = seller;
 
             return game;
         }

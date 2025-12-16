@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using VideoGameStore.Context;
 using VideoGameStore.Dtos;
 using VideoGameStore.Entities;
@@ -14,7 +16,8 @@ namespace VideoGameStore.Controllers
     {
         private readonly IGameService _gameService;
 
-        public GameController(IGameService gameService, AppDbContext dbContext, UserManager<AspNetUser> userManager) : base(dbContext, userManager)
+        public GameController(IGameService gameService, AppDbContext dbContext, UserManager<AspNetUser> userManager, ILogger<GameController> logger)
+            : base(dbContext, userManager, logger)
         {
             _gameService = gameService;
         }
@@ -72,12 +75,15 @@ namespace VideoGameStore.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Seller")]
+        [Consumes("multipart/form-data")]
         public async Task<ActionResult> CreateGame([FromForm] GameWithKeysRequest gameRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(await _gameService.Create(gameRequest));
+            Seller seller = await GetCurrentDomainUserAsync() as Seller;
+
+            return Ok(await _gameService.Create(gameRequest, seller));
         }
 
         [HttpPost("{id}/keys")]

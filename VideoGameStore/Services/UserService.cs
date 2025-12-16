@@ -112,6 +112,8 @@ namespace VideoGameStore.Services
             await _userManager.AddClaimAsync(aspNetUser, new Claim(ClaimTypes.Role, role));
             await _userManager.AddToRoleAsync(aspNetUser, role);
 
+            _logger.LogDebug($"User CREATED id: {user.Id})");
+
             return aspNetUser;
         }
     }
