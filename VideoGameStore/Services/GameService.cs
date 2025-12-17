@@ -6,6 +6,7 @@ using VideoGameStore.Utils;
 using VideoGameStore.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Linq.Expressions;
 
 namespace VideoGameStore.Services
 {
@@ -44,6 +45,8 @@ namespace VideoGameStore.Services
 
             await _keyService.CreateKeysAsync(keys, game);
 
+            await _context.SaveChangesAsync();
+
             return _gameMapper.ToResponse(game);
 
         }
@@ -67,12 +70,12 @@ namespace VideoGameStore.Services
         public async Task<Page<GameResponse>> FindAll(Pageable pageable)
         {
             return await _context.Games.Include(g => g.Keys).Include(g => g.Genres).ToPageAsync(pageable, g => _gameMapper.ToResponse(g), 
-                new List<Predicate<Game>>() { g => g.Keys.Any() });
+                new List<Expression<Func<Game, bool>>>() { g => g.Keys.Any() });
         }
 
         public async Task<Page<GameResponse>> FindAllByFilter(Pageable pageable, FilterRequest filter)
         {
-            List<Predicate<Game>> predicates = new List<Predicate<Game>>();
+            List<Expression<Func<Game, bool>>> predicates = new List<Expression<Func<Game, bool>>>();
 
             if(filter.MinPrice > 0)
                 predicates.Add(g => g.Price >= filter.MinPrice);
@@ -94,7 +97,7 @@ namespace VideoGameStore.Services
         public async Task<Page<SellerGameResponse>> FindAllBySellerId(long sellerId, Pageable pageable)
         {
             return await _context.Games.AsNoTracking().Include(g => g.Keys).ToPageAsync(pageable, g => _gameMapper.ToResponseForSeller(g), 
-                new List<Predicate<Game>>() { g => g.Seller.Id == sellerId });
+                new List<Expression<Func<Game, bool>>>() { g => g.Seller.Id == sellerId });
         }
 
         public async Task<GameResponse> FindById(long gameId)

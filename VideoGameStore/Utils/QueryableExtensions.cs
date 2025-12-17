@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using VideoGameStore.Dtos;
 using VideoGameStore.Entities;
 
@@ -7,13 +8,17 @@ namespace VideoGameStore.Utils
     public static class QueryableExtensions
     {
         public static async Task<Page<Dto>> ToPageAsync<Entity, Dto>(this IQueryable<Entity> source, Pageable pageable, 
-            Func<Entity, Dto> map, List<Predicate<Entity>>? predicates) where Entity : BaseEntity
+            Func<Entity, Dto> map, List<Expression<Func<Entity, bool>>>? predicates) where Entity : BaseEntity
         {
             int total = await source.CountAsync();
 
-            if(predicates != null) 
-                foreach(var p in predicates)
-                    source.Where(e => p.Invoke(e));
+            if(predicates != null)
+            {
+                foreach (var predicate in predicates)
+                {
+                    source = source.Where(predicate);
+                }
+            }
 
             List<Entity> items = await source
                 .OrderBy(i => i.Id)
