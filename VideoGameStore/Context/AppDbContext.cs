@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using VideoGameStore.Entities;
 
 namespace VideoGameStore.Context
@@ -79,6 +80,10 @@ namespace VideoGameStore.Context
                 .ToTable("OrderItems")
                 .Property(oi => oi.Price)
                 .HasColumnType("decimal(10,2)");
+
+            modelBuilder.Entity<OrderItem>()
+                 .Property(o => o.Keys)
+                 .HasColumnType("nvarchar(max)");
 
             //CART
             modelBuilder.Entity<Cart>()

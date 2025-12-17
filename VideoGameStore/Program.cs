@@ -5,10 +5,8 @@ using VideoGameStore.Entities;
 using VideoGameStore.Services;
 using VideoGameStore.Mappers;
 using Microsoft.Data.SqlClient;
-using Microsoft.AspNetCore.Mvc.Filters;
 using VideoGameStore.Exceptions;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 public class Program
 {
@@ -30,7 +28,6 @@ public class Program
                 Version = "v1"
             });
         });
-
 
         builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(
@@ -88,74 +85,36 @@ public class Program
 
         var app = builder.Build();
 
-        if (!app.Environment.IsEnvironment("Testing"))
+        using (var scope = app.Services.CreateScope())
         {
-            using (var scope = app.Services.CreateScope())
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+            var isTestEnvironment = app.Environment.IsEnvironment("Testing");
+
+            try
             {
-                var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-                var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-                try
+                if (!isTestEnvironment)
                 {
-                    var connString = configuration.GetConnectionString("LocalConnection");
-
-                    var builder2 = new SqlConnectionStringBuilder(connString)
-                    {
-                        InitialCatalog = "master"
-                    };
-
-                    using (var conn = new SqlConnection(builder2.ConnectionString))
-                    {
-                        await conn.OpenAsync();
-                        using var cmd = conn.CreateCommand();
-
-                        cmd.CommandText = @"IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = N'VideoGameStoreDb')
-                        BEGIN
-                            CREATE DATABASE [VideoGameStoreDb];
-                        END";
-                        await cmd.ExecuteNonQueryAsync();
-                        logger.LogInformation("Database created or already exists");
-                    }
-
-                    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                    await db.Database.MigrateAsync();
-                    logger.LogInformation("Migrations applied");
-
-                    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<long>>>();
-                    var roles = new[] { "Seller", "Customer" };
-
-                    foreach (var role in roles)
-                    {
-                        if (!await roleManager.RoleExistsAsync(role))
-                        {
-                            await roleManager.CreateAsync(new IdentityRole<long> { Name = role });
-                            logger.LogInformation($"Role '{role}' created");
-                        }
-                    }
-
-                    var initSqlPath = Path.Combine(AppContext.BaseDirectory, "Sql", "init-db.sql");
-                    if (File.Exists(initSqlPath))
-                    {
-                        var initSql = await File.ReadAllTextAsync(initSqlPath);
-                        if (!string.IsNullOrWhiteSpace(initSql))
-                        {
-                            await db.Database.ExecuteSqlRawAsync(initSql);
-                            logger.LogInformation("Init data loaded");
-                        }
-                    }
-                    else
-                    {
-                        logger.LogWarning($"Init SQL file not found: {initSqlPath}");
-                    }
+                    await CreateDatabaseAsync(configuration, logger);
                 }
-                catch (Exception ex)
+
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                await db.Database.MigrateAsync();
+                logger.LogInformation("Migrations applied");
+
+                await CreateRolesAsync(scope.ServiceProvider, logger);
+
+                if (!isTestEnvironment)
                 {
-                    logger.LogError(ex, "Error during database initialization");
-                    throw;
+                    await LoadInitDataAsync(db, logger);
                 }
             }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error during application initialization");
+                throw;
+            }
         }
-
 
         if (app.Environment.IsDevelopment())
         {
@@ -172,5 +131,84 @@ public class Program
         app.MapControllers();
 
         await app.RunAsync();
+    }
+
+    private static async Task CreateDatabaseAsync(IConfiguration configuration, ILogger<Program> logger)
+    {
+        try
+        {
+            var connString = configuration.GetConnectionString("LocalConnection");
+            var builder = new SqlConnectionStringBuilder(connString)
+            {
+                InitialCatalog = "master"
+            };
+
+            using (var conn = new SqlConnection(builder.ConnectionString))
+            {
+                await conn.OpenAsync();
+                using var cmd = conn.CreateCommand();
+
+                cmd.CommandText = @"IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = N'VideoGameStoreDb')
+                    BEGIN
+                        CREATE DATABASE [VideoGameStoreDb];
+                    END";
+                await cmd.ExecuteNonQueryAsync();
+                logger.LogInformation("Database created or already exists");
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error creating database");
+            throw;
+        }
+    }
+
+    private static async Task CreateRolesAsync(IServiceProvider serviceProvider, ILogger<Program> logger)
+    {
+        try
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<long>>>();
+            var roles = new[] { "Seller", "Customer" };
+
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole<long> { Name = role });
+                    logger.LogInformation($"Role '{role}' created");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error creating roles");
+            throw;
+        }
+    }
+
+    private static async Task LoadInitDataAsync(AppDbContext db, ILogger<Program> logger)
+    {
+        try
+        {
+            var initSqlPath = Path.Combine(AppContext.BaseDirectory, "Sql", "init-db.sql");
+            if (File.Exists(initSqlPath))
+            {
+                var initSql = await File.ReadAllTextAsync(initSqlPath);
+                if (!string.IsNullOrWhiteSpace(initSql))
+                {
+                    await db.Database.ExecuteSqlRawAsync(initSql);
+                    logger.LogInformation("Init data loaded");
+                }
+            }
+            else
+            {
+                logger.LogWarning($"Init SQL file not found: {initSqlPath}");
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error loading init data");
+            throw;
+        }
     }
 }

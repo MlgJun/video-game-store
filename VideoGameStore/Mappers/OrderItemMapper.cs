@@ -10,13 +10,13 @@ namespace VideoGameStore.Mappers
             return new OrderItemResponse(orderItem.Game.Title, orderItem.Quantity, orderItem.Price);
         }
 
-        public OrderItem ToEntity(OrderItemRequest itemRequest, Game game, string key)
+        public OrderItem ToEntity(OrderItemRequest itemRequest, Game game, List<string> keys)
         {
             var entity = new OrderItem();
             entity.Quantity = itemRequest.Quantity;
             entity.Price = game.Price;
             entity.Game = game;
-            entity.Key = key;
+            entity.Keys = keys;
 
             return entity;
         }
@@ -26,7 +26,7 @@ namespace VideoGameStore.Mappers
             return listOrderItems.Select(item => ToResponse(item)).ToList();
         }
 
-        public List<OrderItem> ToEnitytList(List<OrderItemRequest> listOrderItem, List<Game> games, Queue<string> keys)
+        public List<OrderItem> ToEnitytList(List<OrderItemRequest> listOrderItem, List<Game> games, Dictionary<long, List<string>> keys)
         {
             Dictionary<long, Game> dicGames = new Dictionary<long, Game>();
 
@@ -37,9 +37,9 @@ namespace VideoGameStore.Mappers
 
             List<OrderItem> orderItems = [];
 
-            foreach (var i in listOrderItem)
+            foreach (var orderItem in listOrderItem)
             {
-                orderItems.Add(ToEntity(i, dicGames[i.GameId], keys.Dequeue()));
+                orderItems.Add(ToEntity(orderItem, dicGames[orderItem.GameId], keys[orderItem.GameId]));
             }
 
             return orderItems;

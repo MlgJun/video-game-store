@@ -37,11 +37,11 @@ namespace VideoGameStore.Controllers
                     .Include(c => c.Cart)
                     .ThenInclude(c => c.CartItems)
                     .FirstOrDefaultAsync(c => c.Id == identityUserId)
-                    ?? throw new KeyNotFoundException(),
+                    ?? throw new UnauthorizedAccessException("Customer not authenticated"),
 
                 "Seller" => await _dbContext.Sellers
                     .FirstOrDefaultAsync(s => s.Id == identityUserId)
-                    ?? throw new KeyNotFoundException(),
+                    ?? throw new UnauthorizedAccessException("Seller not authenticated"),
 
                 _ => throw new UnauthorizedAccessException("Unknown role")
             };

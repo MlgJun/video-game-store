@@ -1,5 +1,4 @@
 ﻿using Testcontainers.MsSql;
-using Xunit;
 
 namespace VideoGameStore.Tests
 {
@@ -7,7 +6,6 @@ namespace VideoGameStore.Tests
     {
         public MsSqlContainer MsSqlContainer { get; private set; } = null!;
         public string ConnectionString { get; private set; } = null!;
-
 
         public async Task InitializeAsync()
         {
@@ -17,7 +15,7 @@ namespace VideoGameStore.Tests
                 .WithCleanUp(true)
                 .WithReuse(true)
                 .Build();
-            
+
             await MsSqlContainer.StartAsync();
 
             ConnectionString = MsSqlContainer.GetConnectionString();

@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VideoGameStore.Context;
 using VideoGameStore.Tests;
 
@@ -21,7 +17,7 @@ namespace VideoGameStore.Test.Integrations
 
         protected IntegrationTestBase(MsSqlFixture fixture)
         {
-            _fixture = fixture; 
+            _fixture = fixture;
         }
 
         public virtual async Task InitializeAsync()
@@ -38,7 +34,7 @@ namespace VideoGameStore.Test.Integrations
 
         public async Task DisposeAsync()
         {
-            //DbContext?.Dispose();
+            DbContext?.Dispose();
             //_scope?.Dispose();
             _factory?.Dispose();
             await _fixture.DisposeAsync();
