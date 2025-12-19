@@ -38,7 +38,8 @@ namespace VideoGameStore.Test.Integrations
                 CreatedAt = DateTime.Now,
                 Seller = _testSeller,
                 DeveloperTitle = "Cda games",
-                PublisherTitle = "Cda games"
+                PublisherTitle = "Cda games",
+                ImageUrl = "fakeurl/123"
             };
 
             _testGame2 = new Game
@@ -49,7 +50,8 @@ namespace VideoGameStore.Test.Integrations
                 CreatedAt = DateTime.Now,
                 Seller = _testSeller,
                 DeveloperTitle = "Cda games",
-                PublisherTitle = "Cda games"
+                PublisherTitle = "Cda games",
+                ImageUrl = "fakeurl/123"
             };
 
             _testSeller.Games.Add(_testGame1);

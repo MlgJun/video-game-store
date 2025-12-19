@@ -15,25 +15,31 @@ namespace VideoGameStore.Services
         private readonly GameMapper _gameMapper;
         private readonly AppDbContext _context;
         private readonly IKeyService _keyService;
+        private readonly IFileStorage _fileStorage;
 
-        public GameService(AppDbContext context, GameMapper gameMapper, IKeyService keyService)
+        public GameService(AppDbContext context, GameMapper gameMapper, IKeyService keyService, IFileStorage fileStorage)
         {
             _context = context;
             _gameMapper = gameMapper;
             _keyService = keyService;
+            _fileStorage = fileStorage;
         }
 
         public async Task<GameResponse> Create(GameWithKeysRequest request, Seller seller)
         {
-            Game game = _gameMapper.ToEntity(request, seller);
+            string imageUrl = PathGenerator.GenerateFilePath(request.Image);
 
-            List<Key> keys = await _keyService.CreateKeysAsync(request.File, game);
+            await _fileStorage.UploadPhotoAsync(imageUrl, request.Image);
+
+            Game game = _gameMapper.ToEntity(request, seller, imageUrl);
+
+            List<Key> keys = await _keyService.CreateKeysAsync(request.Keys, game);
 
             await _context.Games.AddAsync(game);
             await _context.Keys.AddRangeAsync(keys);
             await _context.SaveChangesAsync();
 
-            return _gameMapper.ToResponse(game);
+            return _gameMapper.ToResponse(game, _fileStorage.Url(game.ImageUrl));
         }
 
         public async Task<GameResponse> AddKeys(long gameId, IFormFile keys)
@@ -47,7 +53,7 @@ namespace VideoGameStore.Services
 
             await _context.SaveChangesAsync();
 
-            return _gameMapper.ToResponse(game);
+            return _gameMapper.ToResponse(game, _fileStorage.Url(game.ImageUrl));
 
         }
 
@@ -61,6 +67,8 @@ namespace VideoGameStore.Services
             if (game.Seller.Id != sellerId)
                 throw new BadRequest("You can only delete your own games");
 
+            await _fileStorage.DeletePhotoAsync(game.ImageUrl);
+
             _context.Games.Remove(game);
             await _context.SaveChangesAsync();
 
@@ -69,7 +77,8 @@ namespace VideoGameStore.Services
 
         public async Task<Page<GameResponse>> FindAll(Pageable pageable)
         {
-            return await _context.Games.Include(g => g.Keys).Include(g => g.Genres).ToPageAsync(pageable, g => _gameMapper.ToResponse(g), 
+            return await _context.Games.Include(g => g.Keys).Include(g => g.Genres).ToPageAsync(pageable, 
+                g => _gameMapper.ToResponse(g, _fileStorage.Url(g.ImageUrl)), 
                 new List<Expression<Func<Game, bool>>>() { g => g.Keys.Any() });
         }
 
@@ -91,12 +100,13 @@ namespace VideoGameStore.Services
                     predicates.Add(g => g.Title.Contains(genre));
 
             return await _context.Games.Include(g => g.Keys).Include(g => g.Genres)
-                .ToPageAsync(pageable, g => _gameMapper.ToResponse(g), predicates);
+                .ToPageAsync(pageable, g => _gameMapper.ToResponse(g, _fileStorage.Url(g.ImageUrl)), predicates);
         }
 
         public async Task<Page<SellerGameResponse>> FindAllBySellerId(long sellerId, Pageable pageable)
         {
-            return await _context.Games.AsNoTracking().Include(g => g.Keys).ToPageAsync(pageable, g => _gameMapper.ToResponseForSeller(g), 
+            return await _context.Games.AsNoTracking().Include(g => g.Keys).ToPageAsync(pageable, 
+                g => _gameMapper.ToResponseForSeller(g, _fileStorage.Url(g.ImageUrl)), 
                 new List<Expression<Func<Game, bool>>>() { g => g.Seller.Id == sellerId });
         }
 
@@ -108,7 +118,7 @@ namespace VideoGameStore.Services
             if (game == null)
                 throw new EntityNotFound($"Game not found by id : {gameId}");
 
-            return _gameMapper.ToResponse(game);
+            return _gameMapper.ToResponse(game, _fileStorage.Url(game.ImageUrl));
         }
 
         public async Task<GameResponse> Update(long gameId, long sellerId, GameRequest request)
@@ -120,12 +130,18 @@ namespace VideoGameStore.Services
 
             if (game.Seller.Id != sellerId)
                 throw new BadRequest("You can only update your own games");
-            
-            _gameMapper.Update(request, game);
+
+            string imageUrl = PathGenerator.GenerateFilePath(request.Image);
+
+            await _fileStorage.DeletePhotoAsync(game.ImageUrl);
+
+            await _fileStorage.UploadPhotoAsync(imageUrl, request.Image);
+
+            _gameMapper.Update(request, game, imageUrl);
 
             await _context.SaveChangesAsync();
 
-            return _gameMapper.ToResponse(game);
+            return _gameMapper.ToResponse(game, _fileStorage.Url(game.ImageUrl));
         }
     }
 }

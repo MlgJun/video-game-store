@@ -35,14 +35,14 @@ IF NOT EXISTS (SELECT 1 FROM [dbo].[Games])
 BEGIN
     INSERT INTO [dbo].[Games]
         ([Price], [Title], [Description], [SellerId],
-         [DeveloperTitle], [PublisherTitle], [CreatedAt])
+         [DeveloperTitle], [PublisherTitle], [CreatedAt], [ImageUrl])
     VALUES
         (19.99, N'Space Shooter', N'Аркадный космический шутер',
-         3, N'StarDev Studio', N'Galaxy Publishing', SYSUTCDATETIME()),
+         3, N'StarDev Studio', N'Galaxy Publishing', SYSUTCDATETIME(), 'fakeurl/111'),
         (39.99, N'Dungeon RPG', N'Пошаговая RPG в подземельях',
-         3, N'DeepDungeons', N'OldSchool Games', SYSUTCDATETIME()),
+         3, N'DeepDungeons', N'OldSchool Games', SYSUTCDATETIME(), 'fakeurl/222'),
         (9.99, N'Indie Pixel', N'Инди-платформер в пиксельной графике',
-         4, N'IndieBrothers', N'IndieBrothers', SYSUTCDATETIME());
+         4, N'IndieBrothers', N'IndieBrothers', SYSUTCDATETIME(), 'fakeurl/333');
 END;
 
 ------------------------------------------------------------
@@ -141,7 +141,7 @@ BEGIN
 
         DECLARE @OrderId1 BIGINT = SCOPE_IDENTITY();
 
-        INSERT INTO [dbo].[OrderItems] ([GameId], [Quantity], [Price], [OrderId], [Key])
-        VALUES (@GameIdSpace2, 1, @PriceSpace, @OrderId1, N'SPACE-ORDER-KEY-DEMO');
+        INSERT INTO [dbo].[OrderItems] ([GameId], [Quantity], [Price], [OrderId], [Keys])
+        VALUES (@GameIdSpace2, 1, @PriceSpace, @OrderId1,  N'[\"SPACE-ORDER-KEY-DEMO\", \"SPACE-KEY-2\", \"SPACE-KEY-3\"]');
     END;
 END;

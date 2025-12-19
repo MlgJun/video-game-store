@@ -82,7 +82,7 @@ namespace VideoGameStore.Services
 
                 _logger.LogDebug($"Seller created with email and username: {request.Email}, {request.Username}");
 
-                return _sellerMapper.ToResponse(seller, user, new List<Game>());
+                return _sellerMapper.ToResponse(seller, user, new Dictionary<Game, string>());
             }
             catch (Exception ex)
             {

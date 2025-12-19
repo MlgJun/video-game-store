@@ -42,7 +42,7 @@
 
                 services.AddScoped<ICartService, CartService>();
                 services.AddScoped<IUserService, UserService>();
-                
+                services.AddScoped<IFileStorage, MinioService>();
                 services.AddScoped<IOrderService, OrderService>();
                 services.AddScoped<IKeyService, KeyService>();
                 services.AddScoped<IGenreService, GenreService>();
