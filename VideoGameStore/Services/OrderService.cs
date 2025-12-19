@@ -51,12 +51,10 @@ namespace VideoGameStore.Services
 
         private Dictionary<long, List<string>> DeleteKeys(Dictionary<long, int> gameIdsWithQuantity)
         {
-            // ✅ Получи список ID из Dictionary
             List<long> gameIdList = gameIdsWithQuantity.Keys.ToList();
 
-            // Берём ВСЕ ключи и группируем по gameId за одну операцию
             Dictionary<long, List<string>> keysByGameId = _context.Keys
-                .Where(k => gameIdList.Contains(k.GameId))  // ✅ Используй Contains на List
+                .Where(k => gameIdList.Contains(k.GameId))
                 .GroupBy(k => k.GameId)
                 .ToDictionary(
                     g => g.Key,
@@ -72,15 +70,13 @@ namespace VideoGameStore.Services
                     throw new InvalidOperationException(
                         $"Not enough keys for game {gameId}. Need {quantity}, found {keysByGameId.GetValueOrDefault(gameId)?.Count ?? 0}");
 
-                // Берём первые N ключей для этой игры
                 keysByGameId[gameId] = keysByGameId[gameId].Take(quantity).ToList();
             }
 
-            // Удаляем только использованные ключи
             HashSet<string> usedKeyValues = keysByGameId.Values.SelectMany(v => v).ToHashSet();
 
             List<Key> keysToDeleteFromDb = _context.Keys
-                .Where(k => gameIdList.Contains(k.GameId) && usedKeyValues.Contains(k.Value))  // ✅ Contains на List
+                .Where(k => gameIdList.Contains(k.GameId) && usedKeyValues.Contains(k.Value))
                 .ToList();
 
             _context.Keys.RemoveRange(keysToDeleteFromDb);
