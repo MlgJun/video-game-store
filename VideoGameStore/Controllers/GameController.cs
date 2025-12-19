@@ -63,6 +63,7 @@ namespace VideoGameStore.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Seller")]
+        [Consumes("multipart/form-data")]
         public async Task<ActionResult> UpdateGame(long id, [FromBody] GameRequest gameRequest)
         {
             if (!ModelState.IsValid)
