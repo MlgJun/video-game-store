@@ -11,5 +11,6 @@
         public Seller Seller { get; set; } = null!;
         public List<Genre> Genres { get; set; } = new();
         public List<Key> Keys { get; set; } = new();
+        public string ImageUrl { get; set; } = null!;
     }
 }

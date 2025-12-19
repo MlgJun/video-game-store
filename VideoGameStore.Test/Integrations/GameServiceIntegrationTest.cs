@@ -42,8 +42,9 @@ namespace VideoGameStore.Test.Integrations
                 Description = "Test Description",
                 DeveloperTitle = "Test Developer",
                 PublisherTitle = "Test Publisher",
-                File = CreateMockFormFile(),
-                Genres = new List<GenreRequest>() { new GenreRequest("Action") }
+                Keys = CreateMockFormFile(),
+                Genres = new List<GenreRequest>() { new GenreRequest("Action") },
+                Image = CreateTestImageFile("photo888.png")
             };
         }
 
@@ -67,8 +68,6 @@ namespace VideoGameStore.Test.Integrations
                 ContentType = "application/json"
             };
         }
-
-
 
         [Fact]
         public async Task Create_WithValidRequest_ShouldCreateGameWithKeys()
@@ -121,14 +120,11 @@ namespace VideoGameStore.Test.Integrations
         [Fact]
         public async Task Delete_WithValidGameId_ShouldDeleteGame()
         {
-            // Arrange
             var request = CreateGameWithKeysRequest();
             var created = await _gameService.Create(request, _testSeller);
 
-            // Act
             var result = await _gameService.Delete(created.Id, _testSeller.Id);
 
-            // Assert
             Assert.True(result);
 
             var deletedGame = await DbContext.Games.FirstOrDefaultAsync(g => g.Id == created.Id);
@@ -138,7 +134,6 @@ namespace VideoGameStore.Test.Integrations
         [Fact]
         public async Task Delete_WithInvalidSellerId_ShouldThrowBadRequest()
         {
-            // Arrange
             var request = CreateGameWithKeysRequest();
             var created = await _gameService.Create(request, _testSeller);
 
@@ -146,7 +141,6 @@ namespace VideoGameStore.Test.Integrations
             await DbContext.Sellers.AddAsync(otherSeller);
             await DbContext.SaveChangesAsync();
 
-            // Act & Assert
             var exception = await Assert.ThrowsAsync<BadRequest>(
                 () => _gameService.Delete(created.Id, otherSeller.Id));
 
@@ -156,7 +150,6 @@ namespace VideoGameStore.Test.Integrations
         [Fact]
         public async Task Delete_WithInvalidGameId_ShouldThrowEntityNotFound()
         {
-            // Act & Assert
             const long invalidGameId = 999L;
             var exception = await Assert.ThrowsAsync<EntityNotFound>(
                 () => _gameService.Delete(invalidGameId, _testSeller.Id));
@@ -167,7 +160,6 @@ namespace VideoGameStore.Test.Integrations
         [Fact]
         public async Task Update_WithValidRequest_ShouldUpdateGame()
         {
-            // Arrange
             var createRequest = CreateGameWithKeysRequest();
             var created = await _gameService.Create(createRequest, _testSeller);
 
@@ -177,7 +169,8 @@ namespace VideoGameStore.Test.Integrations
                 Description: "Updated Description",
                 DeveloperTitle: "Updated Developer",
                 PublisherTitle: "Updated Publisher",
-                Genres: new List<GenreRequest>() { new GenreRequest("Action")}
+                Genres: new List<GenreRequest>() { new GenreRequest("Action") },
+                Image: CreateTestImageFile("photo1.png")
             );
 
             // Act
@@ -206,7 +199,8 @@ namespace VideoGameStore.Test.Integrations
                 Description: "Updated Description",
                 DeveloperTitle: "Updated Developer",
                 PublisherTitle: "Updated Publisher",
-                Genres: new List<GenreRequest>()
+                Genres: new List<GenreRequest>(),
+                Image: CreateTestImageFile("photo2.jpg")
             );
 
             // Act & Assert
@@ -338,6 +332,18 @@ namespace VideoGameStore.Test.Integrations
             // Assert
             Assert.NotNull(result);
             Assert.All(result.Content, game => Assert.True(game.Price >= 3000m));
+        }
+
+        private IFormFile CreateTestImageFile(string fileName = "test.jpg")
+        {
+            var bytes = new byte[1024];
+            var stream = new MemoryStream(bytes);
+            var formFile = new FormFile(stream, 0, stream.Length, "file", fileName)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "image/jpeg"
+            };
+            return formFile;
         }
     }
 }

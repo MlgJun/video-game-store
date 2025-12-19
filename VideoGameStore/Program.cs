@@ -7,6 +7,7 @@ using VideoGameStore.Mappers;
 using Microsoft.Data.SqlClient;
 using VideoGameStore.Exceptions;
 using Microsoft.OpenApi.Models;
+using Minio;
 
 public class Program
 {
@@ -17,6 +18,21 @@ public class Program
         builder.Services.AddControllers(options =>
         {
             options.Filters.Add<GlobalExceptionFilter>();
+        });
+
+        builder.Services.AddSingleton<IMinioClient>(sp =>
+        {
+            var cfg = builder.Configuration.GetSection("Minio");
+            var endpoint = cfg["Endpoint"];
+            var accessKey = cfg["AccessKey"];
+            var secretKey = cfg["SecretKey"];
+            var withSsl = bool.Parse(cfg["WithSSL"] ?? "false");
+
+            var client = new MinioClient()
+                .WithEndpoint(endpoint)
+                .WithCredentials(accessKey, secretKey);
+
+            return client.Build();
         });
 
         builder.Services.AddEndpointsApiExplorer();
@@ -31,7 +47,7 @@ public class Program
 
         builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(
-                builder.Configuration.GetConnectionString("LocalConnection")
+                builder.Configuration.GetConnectionString("DefaultConnection")
             ));
 
         builder.Services.AddIdentity<AspNetUser, IdentityRole<long>>(options =>
@@ -76,6 +92,7 @@ public class Program
         builder.Services.AddScoped<CartItemMapper>();
         builder.Services.AddScoped<OrderItemMapper>();
 
+        builder.Services.AddScoped<IFileStorage, MinioService>();
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ICartService, CartService>();
         builder.Services.AddScoped<IOrderService, OrderService>();
@@ -137,7 +154,7 @@ public class Program
     {
         try
         {
-            var connString = configuration.GetConnectionString("LocalConnection");
+            var connString = configuration.GetConnectionString("DefaultConnection");
             var builder = new SqlConnectionStringBuilder(connString)
             {
                 InitialCatalog = "master"

@@ -38,7 +38,8 @@ public class CartServiceIntegrationTests : IntegrationTestBase
             CreatedAt = DateTime.Now,
             Seller = _testSeller,
             DeveloperTitle = "Cda games",
-            PublisherTitle = "Cda games"
+            PublisherTitle = "Cda games",
+            ImageUrl = "fakeurl/game.png"
         };
 
         _testSeller.Games.Add(_testGame);
@@ -107,7 +108,8 @@ public class CartServiceIntegrationTests : IntegrationTestBase
             CreatedAt = DateTime.UtcNow,
             DeveloperTitle = "Cda games",
             PublisherTitle = "Cda games",
-            Seller = _testSeller
+            Seller = _testSeller,
+            ImageUrl = "fakeurl/bob.png"
         };
 
         DbContext.Games.Add(game2);
@@ -116,11 +118,9 @@ public class CartServiceIntegrationTests : IntegrationTestBase
         var request1 = new CartItemRequest(GameId: _testGame.Id, Quantity: 1);
         var request2 = new CartItemRequest(GameId: game2.Id, Quantity: 2);
 
-        // Act
         await _cartService.AddToCart(_testCart, request1);
         var result = await _cartService.AddToCart(_testCart, request2);
 
-        // Assert
         Assert.NotNull(result);
         Assert.Equal(2, _testCart.CartItems.Count);
     }
@@ -179,7 +179,6 @@ public class CartServiceIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task RemoveFromCart_WithInvalidGameId_ShouldThrowEntityNotFound()
     {
-        // Arrange
         var cartItem = new CartItem
         {
             GameId = _testGame.Id,
@@ -222,7 +221,8 @@ public class CartServiceIntegrationTests : IntegrationTestBase
             CreatedAt = DateTime.UtcNow,
             DeveloperTitle = "Cda games",
             PublisherTitle = "Cda games",
-            Seller = _testSeller
+            Seller = _testSeller,
+            ImageUrl = "fakeurl/lol.png"
         };
 
         DbContext.Games.Add(game2);

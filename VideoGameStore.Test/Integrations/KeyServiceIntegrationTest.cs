@@ -35,7 +35,8 @@ namespace VideoGameStore.Test.Integrations
                 PublisherTitle = "ZilibobaPublisher",
                 Price = 29.99m,
                 CreatedAt = DateTime.Now,
-                Seller = _seller
+                Seller = _seller,
+                ImageUrl = "fakeurl/1546"
             };
 
             _seller.Games.Add(_testGame);
@@ -92,7 +93,8 @@ namespace VideoGameStore.Test.Integrations
                 PublisherTitle = "ZilibobaPublisher",
                 Price = 49.99m,
                 CreatedAt = DateTime.Now,
-                Seller = _seller
+                Seller = _seller,
+                ImageUrl = "fakeurl/999"
             };
             await DbContext.Games.AddAsync(game2);
             await DbContext.SaveChangesAsync();

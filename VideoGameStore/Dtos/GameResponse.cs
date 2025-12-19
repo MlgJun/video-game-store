@@ -1,6 +1,6 @@
 ﻿namespace VideoGameStore.Dtos
 {
     public record class GameResponse (long Id, string PublisherTitle, string DeveloperTitle, decimal Price, 
-        string Title, string? Description, DateTime CreatedAt, List<GenreResponse> Genres, int Count);
+        string Title, string? Description, DateTime CreatedAt, List<GenreResponse> Genres, int Count, string ImageUrl);
    
 }

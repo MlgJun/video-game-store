@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Minio;
 using VideoGameStore.Context;
 using VideoGameStore.Tests;
 
@@ -11,6 +12,8 @@ namespace VideoGameStore.Test.Integrations
     {
         protected AppDbContext DbContext { get; private set; } = null!;
         protected IServiceProvider ServiceProvider { get; private set; } = null!;
+        protected IMinioClient MinioClient { get; private set; } = null!;
+        protected MsSqlFixture.MinioConfig MinioConfig { get; private set; } = null!;
         private MsSqlFixture _fixture = null!;
         private WebApplicationFactory<Program> _factory = null!;
         private IServiceScope _scope = null!;
@@ -30,6 +33,8 @@ namespace VideoGameStore.Test.Integrations
             _scope = ServiceProvider.CreateScope();
 
             DbContext = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            MinioClient = _fixture.MinioClient;
+            MinioConfig = _fixture.GetMinioConfig();
         }
 
         public async Task DisposeAsync()

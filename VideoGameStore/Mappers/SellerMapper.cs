@@ -12,7 +12,7 @@ namespace VideoGameStore.Mappers
             _gameMapper = gameMapper;
         }
 
-        public SellerResponse ToResponse(Seller seller, AspNetUser user, List<Game> games)
+        public SellerResponse ToResponse(Seller seller, AspNetUser user, Dictionary<Game, string> games)
         {
             return new SellerResponse(seller.Id, user.UserName, user.Email, _gameMapper.ToResponseList(games));
         }

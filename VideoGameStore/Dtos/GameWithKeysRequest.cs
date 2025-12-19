@@ -21,9 +21,10 @@ namespace VideoGameStore.Dtos
 
         [MinLength(1)]
         public List<GenreRequest> Genres { get; set; }
-
         [Required]
-        public IFormFile File { get; set; }
+        public IFormFile Keys { get; set; }
+        [Required]
+        public IFormFile Image { get; set; }
     }
 }
 
