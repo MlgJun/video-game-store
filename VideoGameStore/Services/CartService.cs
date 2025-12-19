@@ -28,7 +28,13 @@ namespace VideoGameStore.Services
 
             CartItem cartItem = _cartItemMapper.ToEntity(request, game);
 
-            cart.CartItems.Add(cartItem);
+            if(!cart.CartItems.Any(ci => ci.GameId == request.GameId))
+                cart.CartItems.Add(cartItem);
+            else
+            {
+                CartItem ci = cart.CartItems.FirstOrDefault(ci => ci.GameId == request.GameId);
+                ci.Quantity += request.Quantity;
+            }
 
             await _context.SaveChangesAsync();
 

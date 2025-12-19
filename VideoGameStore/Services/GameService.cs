@@ -96,8 +96,13 @@ namespace VideoGameStore.Services
                 predicates.Add(g => g.Title.Contains(filter.GameTitle));
 
             if (!filter.Genres.IsNullOrEmpty())
-                foreach (var genre in filter.Genres)
-                    predicates.Add(g => g.Title.Contains(genre));
+            {
+                var genres = filter.Genres!;
+                predicates.Add(game =>
+                    game.Genres.Any(gameGenre =>
+                        genres.Any(filterGenre =>
+                            gameGenre.Title.Contains(filterGenre))));
+            }
 
             return await _context.Games.Include(g => g.Keys).Include(g => g.Genres)
                 .ToPageAsync(pageable, g => _gameMapper.ToResponse(g, _fileStorage.Url(g.ImageUrl)), predicates);

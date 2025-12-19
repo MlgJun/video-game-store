@@ -31,13 +31,14 @@ namespace VideoGameStore.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult> GetGames([FromQuery] Pageable pageable, [FromQuery] FilterRequest filter)
+        public async Task<ActionResult> GetGames([FromQuery] Pageable pageable, [FromQuery] FilterRequest? filter)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             if (filter != null)
                 return Ok(await _gameService.FindAllByFilter(pageable, filter));
+
             else
                 return Ok(await _gameService.FindAll(pageable));
         }

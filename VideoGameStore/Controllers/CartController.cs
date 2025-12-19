@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using VideoGameStore.Context;
 using VideoGameStore.Dtos;
 using VideoGameStore.Entities;
+using VideoGameStore.Mappers;
 using VideoGameStore.Services;
 
 namespace VideoGameStore.Controllers
@@ -13,11 +14,13 @@ namespace VideoGameStore.Controllers
     public class CartController : BaseController
     {
         private readonly ICartService _cartService;
+        private readonly CartMapper _cartMapper;
 
-        public CartController(ICartService cartService, AppDbContext dbContext, UserManager<AspNetUser> userManager, ILogger<CartController> logger) 
+        public CartController(ICartService cartService, AppDbContext dbContext, UserManager<AspNetUser> userManager, ILogger<CartController> logger, CartMapper cartMapper) 
             : base(dbContext, userManager, logger)
         {
             _cartService = cartService;
+            _cartMapper = cartMapper;
         }
 
 
@@ -55,7 +58,8 @@ namespace VideoGameStore.Controllers
         public async Task<ActionResult> GetCart()
         {
             var customer = await GetCurrentDomainUserAsync();
-            return Ok(((Customer)customer).Cart);
+           
+            return Ok(_cartMapper.ToResponse(((Customer)customer).Cart));
         }
     }
 }

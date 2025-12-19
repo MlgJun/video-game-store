@@ -36,6 +36,7 @@ namespace VideoGameStore.Controllers
                 "Customer" => await _dbContext.Customers
                     .Include(c => c.Cart)
                     .ThenInclude(c => c.CartItems)
+                    .ThenInclude(ci => ci.Game)
                     .FirstOrDefaultAsync(c => c.Id == identityUserId)
                     ?? throw new UnauthorizedAccessException("Customer not authenticated"),
 
