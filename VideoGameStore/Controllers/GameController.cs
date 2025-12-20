@@ -90,7 +90,8 @@ namespace VideoGameStore.Controllers
 
         [HttpPost("{id}/keys")]
         [Authorize(Roles = "Seller")]
-        public async Task<ActionResult> AddKeys(long id, IFormFile keys)
+        [Consumes("multipart/form-data")]
+        public async Task<ActionResult> AddKeys(long id, [FromForm] IFormFile keys)
         {
             return Ok(await _gameService.AddKeys(id, keys));
         }

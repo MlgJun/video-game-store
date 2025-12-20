@@ -26,7 +26,7 @@ namespace VideoGameStore.Controllers
                 User.FindFirstValue(ClaimTypes.NameIdentifier)
                 ?? throw new UnauthorizedAccessException("User not authenticated"));
 
-            _logger.LogDebug($"Identity id :{User.FindFirstValue(ClaimTypes.NameIdentifier)})");
+            _logger.LogError($"Identity id :{User.FindFirstValue(ClaimTypes.NameIdentifier)})");
 
             var role = User.FindFirstValue(ClaimTypes.Role)
                       ?? throw new UnauthorizedAccessException("User not authenticated");
