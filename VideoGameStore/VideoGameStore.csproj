@@ -31,4 +31,8 @@
     <None Include="C:\Users\Николай\source\repos\VideoGameStore\.editorconfig" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

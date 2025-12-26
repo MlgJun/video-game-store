@@ -147,6 +147,9 @@ public class Program
         app.UseAuthorization();
         app.MapControllers();
 
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
+
         await app.RunAsync();
     }
 
