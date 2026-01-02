@@ -90,7 +90,7 @@ namespace VideoGameStore.Services
                 predicates.Add(g => g.Price >= filter.MinPrice);
 
             if (filter.MaxPrice > 0)
-                predicates.Add(g => g.Price >= filter.MaxPrice);
+                predicates.Add(g => g.Price <= filter.MaxPrice);
 
             if (!filter.GameTitle.IsNullOrEmpty())
                 predicates.Add(g => g.Title.Contains(filter.GameTitle));

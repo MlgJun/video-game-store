@@ -27,69 +27,57 @@ namespace VideoGameStore.Services
 
         public async Task<CustomerResponse> CreateCustomer(UserRequest request)
         {
-            var existingUser = await _userManager.FindByEmailAsync(request.Email);
-
-            if (existingUser != null)
-                throw new InvalidOperationException("Customer with this login already exists");
-
-            using var transaction = await _context.Database.BeginTransactionAsync();
-
-            try
+            // 1. ПЕРВЫМ Identity!
+            var aspNetUser = new AspNetUser
             {
-                Cart cart = new Cart();
-                Customer customer = _customerMapper.ToEntity(request, cart);
+                Email = request.Email,
+                UserName = request.Username
+            };
+            var result = await _userManager.CreateAsync(aspNetUser, request.Password);
+            if (!result.Succeeded) throw new Exception("Identity failed");
 
-                await _context.Customers.AddAsync(customer);
-                await _context.Carts.AddAsync(cart);
+            await _userManager.AddToRoleAsync(aspNetUser, "CUSTOMER");
 
-                await _context.SaveChangesAsync();
-
-                AspNetUser user = await CreateIdentity(request, customer, "Customer");
-
-                await transaction.CommitAsync();
-
-                _logger.LogDebug($"Customer created with email and username: {request.Email}, {request.Username}");
-
-                return _customerMapper.ToResponse(customer, user);
-            }
-            catch (Exception ex)
+            // 2. Customer с ID = AspNetUser.Id
+            var customer = new Customer
             {
-                _logger.LogError(ex.Message);
-                await transaction.RollbackAsync();
-                throw;
-            }
+                Id = aspNetUser.Id,  // ← ОДИН ID!
+                CreatedAt = DateTime.UtcNow
+            };
+            var cart = new Cart { CustomerId = aspNetUser.Id };
+
+            await _context.Customers.AddAsync(customer);
+            await _context.Carts.AddAsync(cart);
+            await _context.SaveChangesAsync();
+
+            return _customerMapper.ToResponse(customer, aspNetUser);
         }
+
 
         public async Task<SellerResponse> CreateSeller(UserRequest request)
         {
-            var existingUser = await _userManager.FindByEmailAsync(request.Email);
-
-            if (existingUser != null)
-                throw new InvalidOperationException("Seller with this login already exists");
-
-            using var transaction = await _context.Database.BeginTransactionAsync();
-
-            try
+            var aspNetUser = new AspNetUser
             {
-                Seller seller = _sellerMapper.ToEntity(request);
+                Email = request.Email,
+                UserName = request.Username
+            };
 
-                await _context.Sellers.AddAsync(seller);
-                await _context.SaveChangesAsync();
+            var result = await _userManager.CreateAsync(aspNetUser, request.Password);
+            if (!result.Succeeded) throw new Exception(result.Errors.First().Description);
 
-                AspNetUser user = await CreateIdentity(request, seller, "Seller");
+            await _userManager.AddToRoleAsync(aspNetUser, "SELLER");
 
-                await transaction.CommitAsync();
-
-                _logger.LogDebug($"Seller created with email and username: {request.Email}, {request.Username}");
-
-                return _sellerMapper.ToResponse(seller, user, new Dictionary<Game, string>());
-            }
-            catch (Exception ex)
+            // Seller.Id = AspNetUser.Id
+            var seller = new Seller
             {
-                _logger.LogError(ex.Message);
-                await transaction.RollbackAsync();
-                throw;
-            }
+                Id = aspNetUser.Id,  // ← ОДИН ID!
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _context.Sellers.AddAsync(seller);
+            await _context.SaveChangesAsync();
+
+            return _sellerMapper.ToResponse(seller, aspNetUser, new Dictionary<Game, string>());
         }
 
         private async Task<AspNetUser> CreateIdentity(UserRequest request, User user, string role)
@@ -97,23 +85,19 @@ namespace VideoGameStore.Services
             AspNetUser aspNetUser = new AspNetUser
             {
                 Email = request.Email,
-                UserName = request.Username,
+                UserName = request.Username,  // Логин по Username!
+                NormalizedUserName = request.Username.ToUpperInvariant(),
+                NormalizedEmail = request.Email.ToUpperInvariant()
             };
 
             var result = await _userManager.CreateAsync(aspNetUser, request.Password);
-
             if (!result.Succeeded)
-            {
-                string errors = string.Join(",", result.Errors.Select(e => e.Description));
-                throw new InvalidOperationException($"Failed to create {role} : {errors}");
-            }
+                throw new InvalidOperationException($"Failed to create {role}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
 
-            await _userManager.AddClaimAsync(aspNetUser, new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
-            await _userManager.AddClaimAsync(aspNetUser, new Claim(ClaimTypes.Role, role));
+            // ✅ ТОЛЬКО РОЛЬ! Identity сам создаст NameIdentifier claim
             await _userManager.AddToRoleAsync(aspNetUser, role);
 
-            _logger.LogError($"User CREATED id: {user.Id})");
-
+            _logger.LogError($"User CREATED AspNetUser.Id={aspNetUser.Id}, DomainUser.Id={user.Id}");
             return aspNetUser;
         }
     }

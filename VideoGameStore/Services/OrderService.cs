@@ -13,11 +13,13 @@ namespace VideoGameStore.Services
     {
         private readonly AppDbContext _context;
         private readonly OrderMapper _mapper;
+        private readonly ICartService _cartService;
 
-        public OrderService(AppDbContext context, OrderMapper mapper)
+        public OrderService(AppDbContext context, OrderMapper mapper, ICartService cartService)
         {
             _context = context;
             _mapper = mapper;
+            _cartService = cartService;
         }
 
         public async Task<OrderResponse> Create(Customer customer, OrderRequest request)
@@ -39,6 +41,8 @@ namespace VideoGameStore.Services
             await _context.Orders.AddAsync(order);
 
             await _context.SaveChangesAsync();
+
+            await _cartService.Clear(customer.Cart);
 
             return _mapper.ToResponse(order);
         }

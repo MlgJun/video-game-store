@@ -21,7 +21,7 @@ namespace VideoGameStore.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "CUSTOMER")]
         public async Task<ActionResult<Page<OrderResponse>>> GetPageOrders([FromQuery] Pageable pageable)
         {
             if (!ModelState.IsValid)
@@ -35,7 +35,7 @@ namespace VideoGameStore.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "CUSTOMER")]
         public async Task<ActionResult> CreateOrder([FromBody] OrderRequest order)
         {
             if (!ModelState.IsValid)

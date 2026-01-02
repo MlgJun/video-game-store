@@ -22,29 +22,36 @@ namespace VideoGameStore.Controllers
 
         protected async Task<User> GetCurrentDomainUserAsync()
         {
-            long identityUserId = long.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)
-                ?? throw new UnauthorizedAccessException("User not authenticated"));
+            // ✅ Identity САМ ставит AspNetUser.Id в claim
+            var identityUserIdString = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                ?? throw new UnauthorizedAccessException("User not authenticated");
 
-            _logger.LogError($"Identity id :{User.FindFirstValue(ClaimTypes.NameIdentifier)})");
+            if (!long.TryParse(identityUserIdString, out long identityUserId))
+                throw new UnauthorizedAccessException("Invalid user ID");
 
-            var role = User.FindFirstValue(ClaimTypes.Role)
-                      ?? throw new UnauthorizedAccessException("User not authenticated");
+            _logger.LogInformation("Identity id: {Id}", identityUserId);
+
+            var roles = await _userManager.GetRolesAsync(
+                await _userManager.GetUserAsync(User)) ?? new List<string>();
+
+            var role = roles.FirstOrDefault();
+            if (string.IsNullOrEmpty(role))
+                throw new UnauthorizedAccessException("No role assigned");
 
             return role switch
             {
-                "Customer" => await _dbContext.Customers
+                "CUSTOMER" => await _dbContext.Customers
                     .Include(c => c.Cart)
                     .ThenInclude(c => c.CartItems)
                     .ThenInclude(ci => ci.Game)
                     .FirstOrDefaultAsync(c => c.Id == identityUserId)
-                    ?? throw new UnauthorizedAccessException("Customer not authenticated"),
+                    ?? throw new UnauthorizedAccessException("Customer not found"),
 
-                "Seller" => await _dbContext.Sellers
+                "SELLER" => await _dbContext.Sellers
                     .FirstOrDefaultAsync(s => s.Id == identityUserId)
-                    ?? throw new UnauthorizedAccessException("Seller not authenticated"),
+                    ?? throw new UnauthorizedAccessException("Seller not found"),
 
-                _ => throw new UnauthorizedAccessException("Unknown role")
+                _ => throw new UnauthorizedAccessException($"Unknown role: {role}")
             };
         }
     }

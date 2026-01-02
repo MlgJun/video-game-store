@@ -36,14 +36,15 @@ public class Program
         });
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(options =>
-        {
-            options.SwaggerDoc("v1", new OpenApiInfo
-            {
-                Title = "VideoGameStore API",
-                Version = "v1"
-            });
-        });
+        builder.Services.AddSwaggerGen();
+        //builder.Services.AddSwaggerGen(options =>
+        //{
+        //    options.SwaggerDoc("v1", new OpenApiInfo
+        //    {
+        //        Title = "VideoGameStore API",
+        //        Version = "v1"
+        //    });
+        //});
 
         builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(
@@ -60,6 +61,8 @@ public class Program
 
         builder.Services.ConfigureApplicationCookie(options =>
         {
+            options.Cookie.HttpOnly = false;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.None;
             options.Events.OnRedirectToLogin = context =>
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -142,7 +145,7 @@ public class Program
             });
         }
 
-        app.UseHttpsRedirection();
+        //app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
@@ -188,7 +191,7 @@ public class Program
         try
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<long>>>();
-            var roles = new[] { "Seller", "Customer" };
+            var roles = new[] { "SELLER", "CUSTOMER" };
 
             foreach (var role in roles)
             {

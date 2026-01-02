@@ -44,7 +44,7 @@ namespace VideoGameStore.Controllers
         }
 
         [HttpGet("my")]
-        [Authorize(Roles = "Seller")]
+        [Authorize(Roles = "SELLER")]
         public async Task<ActionResult> GetMyGames([FromQuery] Pageable pageable)
         {
             var seller = await GetCurrentDomainUserAsync();
@@ -53,7 +53,7 @@ namespace VideoGameStore.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Seller")]
+        [Authorize(Roles = "SELLER")]
         public async Task<ActionResult> DeleteGame(long id)
         {
             var seller = await GetCurrentDomainUserAsync();
@@ -63,7 +63,7 @@ namespace VideoGameStore.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Seller")]
+        [Authorize(Roles = "SELLER")]
         [Consumes("multipart/form-data")]
         public async Task<ActionResult> UpdateGame(long id, [FromForm] GameRequest gameRequest)
         {
@@ -76,7 +76,7 @@ namespace VideoGameStore.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Seller")]
+        [Authorize(Roles = "SELLER")]
         [Consumes("multipart/form-data")]
         public async Task<ActionResult> CreateGame([FromForm] GameWithKeysRequest gameRequest)
         {
@@ -89,7 +89,7 @@ namespace VideoGameStore.Controllers
         }
 
         [HttpPost("{id}/keys")]
-        [Authorize(Roles = "Seller")]
+        [Authorize(Roles = "SELLER")]
         [Consumes("multipart/form-data")]
         public async Task<ActionResult> AddKeys(long id, [FromForm] IFormFile keys)
         {

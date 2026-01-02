@@ -31,12 +31,20 @@ namespace VideoGameStore.Context
 
             modelBuilder.Entity<Customer>()
                 .ToTable("Customers")
+                .Property(c => c.Id)
+                .ValueGeneratedNever();
+
+            modelBuilder.Entity<Customer>()
                 .HasOne(c => c.Cart)
                 .WithOne(c => c.Customer)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Seller>()
                 .ToTable("Sellers")
+                .Property(s => s.Id)
+                .ValueGeneratedNever();
+
+            modelBuilder.Entity<Seller>()
                 .HasMany(s => s.Games)
                 .WithOne(g => g.Seller)
                 .OnDelete(DeleteBehavior.Cascade);

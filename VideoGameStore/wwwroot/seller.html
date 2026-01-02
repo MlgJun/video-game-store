@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Продавец — Flex-Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/views_css/seller.css">
+</head>
+
+<body class="seller-page">
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">Flex-Shop</a>
+            <div class="header-actions">
+                <a href="cart.html" class="btn-icon cart">
+                    🛒 <span id="cartBadge" class="badge">0</span>
+                </a>
+                <button id="sellerMenuToggle" class="btn-icon user">👤</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- SELLER MENU -->
+    <div id="sellerMenu" class="side-menu">
+        <div class="menu-header">
+            <div class="avatar">👨‍💼</div>
+            <div>
+                <div id="sellerName">Продавец</div>
+                <div id="sellerEmail">-</div>
+                <div class="role">SELLER</div>
+            </div>
+        </div>
+        <nav class="menu-nav">
+            <button data-page="seller">📦 Мои товары</button>
+            <button data-page="orders">📋 Заказы</button>
+            <a href="index.html">🏠 Главная</a>
+            <button id="logoutBtn">🚪 Выйти</button>
+        </nav>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="seller-main">
+        <div class="page-header">
+            <h1>📦 Мои товары</h1>
+            <div class="stats">
+                <span id="gamesCount">0 игр</span>
+                <button id="addGameBtn" class="btn-primary">➕ Добавить игру</button>
+            </div>
+        </div>
+
+        <div id="productsGrid" class="products-grid">
+            <div class="empty-state">
+                <div class="emoji">🎮</div>
+                <h3>Нет товаров</h3>
+                <p>Добавьте первую игру для продажи!</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- ADD/EDIT GAME MODAL -->
+    <div id="gameModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">➕ Добавить игру</h2>
+                <button class="close-btn" id="closeModal">×</button>
+            </div>
+
+            <form id="gameForm" class="game-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Название игры *</label>
+                        <input type="text" id="title" name="title" required maxlength="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Цена (₽) *</label>
+                        <input type="number" id="price" name="price" min="1" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Разработчик</label>
+                        <input type="text" id="developerTitle" name="developerTitle">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Издатель</label>
+                        <input type="text" id="publisherTitle" name="publisherTitle">
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Описание</label>
+                        <textarea id="description" name="description" rows="4" maxlength="500"></textarea>
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Жанры</label>
+                        <div id="genresList" class="genres-tags"></div>
+                        <button type="button" id="addGenreBtn" class="btn-small">➕ Добавить жанр</button>
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Изображение</label>
+                        <input type="file" id="image" name="image" accept="image/*">
+                        <div id="imagePreview" class="image-preview"></div>
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Ключи активации (JSON)</label>
+                        <input type="file" id="keysFile" name="keys" accept=".json">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary" id="saveGame">💾 Сохранить</button>
+                    <button type="button" class="btn-secondary" id="cancelGame">❌ Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div>© Flex-Shop 2026 | Продавец</div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/seller.js"></script>
+</body>
+</html>

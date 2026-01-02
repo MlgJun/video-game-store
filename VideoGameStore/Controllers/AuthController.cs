@@ -37,7 +37,6 @@ namespace VideoGameStore.Controllers
             else
                 return StatusCode(201, await _userService.CreateCustomer(request));
         }
-
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<ActionResult> Login(UserRequest request)
@@ -45,23 +44,16 @@ namespace VideoGameStore.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = await _userManager.FindByNameAsync(request.Username);
-            if (user == null)
-                return Unauthorized("Invalid login or password");
+            // ✅ ОДИН вызов — всё делает сам!
+            var result = await _signInManager.PasswordSignInAsync(
+                request.Username,  // Ищет по Username/Email автоматически!
+                request.Password,
+                isPersistent: true,
+                lockoutOnFailure: false);
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: false);
-
-            if (!result.Succeeded)
-                return Unauthorized("Invalid login or password");
-
-            var principal = await _signInManager.CreateUserPrincipalAsync(user);
-
-            await HttpContext.SignInAsync(
-                IdentityConstants.ApplicationScheme,
-                principal,
-                new AuthenticationProperties { IsPersistent = true });
-
-            return Ok(new { message = "Login successful" });
+            return result.Succeeded
+                ? Ok(new { message = "Login successful" })
+                : Unauthorized("Invalid login or password");
         }
 
         [HttpPost("logout")]

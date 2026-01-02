@@ -25,7 +25,7 @@ namespace VideoGameStore.Controllers
 
 
         [HttpDelete("items")]
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "CUSTOMER")]
         public async Task<ActionResult> DeleteItems([FromBody] CartItemRequest cartItemRequest)
         {
             if (!ModelState.IsValid)
@@ -40,7 +40,7 @@ namespace VideoGameStore.Controllers
 
 
         [HttpPost("items")]
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "CUSTOMER")]
         public async Task<ActionResult> AddItemToCart([FromBody] CartItemRequest cartItemRequest)
         {
             if (!ModelState.IsValid)
@@ -54,7 +54,7 @@ namespace VideoGameStore.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "CUSTOMER")]
         public async Task<ActionResult> GetCart()
         {
             var customer = await GetCurrentDomainUserAsync();

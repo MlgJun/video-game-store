@@ -28,16 +28,16 @@ END;
 ------------------------------------------------------------
 IF NOT EXISTS (SELECT 1 FROM [dbo].[Customers])
 BEGIN
-    INSERT INTO [dbo].[Customers] ([CreatedAt]) VALUES
-        (SYSUTCDATETIME()),
-        (SYSUTCDATETIME());
+    INSERT INTO [dbo].[Customers] ([Id],[CreatedAt]) VALUES
+        (1000, SYSUTCDATETIME()),
+        (2000, SYSUTCDATETIME());
 END;
 
 IF NOT EXISTS (SELECT 1 FROM [dbo].[Sellers])
 BEGIN
-    INSERT INTO [dbo].[Sellers] ([CreatedAt]) VALUES
-        (SYSUTCDATETIME()),
-        (SYSUTCDATETIME());
+    INSERT INTO [dbo].[Sellers] ([Id], [CreatedAt]) VALUES
+        (3000, SYSUTCDATETIME()),
+        (4000, SYSUTCDATETIME());
 END;
 
 ------------------------------------------------------------
@@ -50,11 +50,11 @@ BEGIN
          [DeveloperTitle], [PublisherTitle], [CreatedAt], [ImageUrl])
     VALUES
         (19.99, N'Space Shooter', N'Аркадный космический шутер',
-         3, N'StarDev Studio', N'Galaxy Publishing', SYSUTCDATETIME(), 'fakeurl/111'),
+         3000, N'StarDev Studio', N'Galaxy Publishing', SYSUTCDATETIME(), 'fakeurl/111'),
         (39.99, N'Dungeon RPG', N'Пошаговая RPG в подземельях',
-         3, N'DeepDungeons', N'OldSchool Games', SYSUTCDATETIME(), 'fakeurl/222'),
+         3000, N'DeepDungeons', N'OldSchool Games', SYSUTCDATETIME(), 'fakeurl/222'),
         (9.99, N'Indie Pixel', N'Инди-платформер в пиксельной графике',
-         4, N'IndieBrothers', N'IndieBrothers', SYSUTCDATETIME(), 'fakeurl/333');
+         4000, N'IndieBrothers', N'IndieBrothers', SYSUTCDATETIME(), 'fakeurl/333');
 END;
 
 ------------------------------------------------------------

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>История покупок - Flex-Shop</title>
+    <link rel="stylesheet" href="css/views_css/purchase.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="history-root">
+        <!-- Header и Menu остаются без изменений -->
+        <header class="site-header" role="banner" aria-label="Главная шапка">
+            <!-- ... header content ... -->
+        </header>
+
+        <div class="menu-fixed-container" id="menuContainer">
+            <!-- ... menu content ... -->
+        </div>
+
+        <main class="purchase-history-canvas" role="main" aria-label="История покупок">
+            <div class="purchase-history-section">
+                <!-- Header с пагинацией -->
+                <div class="purchase-header">
+                    <div class="purchase-info">
+                        <h1 class="purchase-title">История покупок</h1>
+                        <div class="purchase-stats" id="totalItems">0 заказов</div>
+                    </div>
+
+                    <div class="pagination-controls" id="paginationControls" style="display: none;">
+                        <button class="pagination-btn prev-btn" id="prevPage" disabled>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                            </svg>
+                            Назад
+                        </button>
+                        <div class="pagination-info">
+                            <span class="current-page" id="currentPage">1</span>
+                            <span class="page-separator">из</span>
+                            <span class="total-pages" id="totalPages">--</span>
+                        </div>
+                        <button class="pagination-btn next-btn" id="nextPage" disabled>
+                            Вперед
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8.59 16.59L10 18l-6-6 6-6-1.41 1.41L7.17 12z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Состояния загрузки -->
+                <div class="loading-state" id="loadingState" style="display: none;">
+                    <div class="loader">
+                        <div class="spinner"></div>
+                        <p>Загружаем ваши заказы...</p>
+                    </div>
+                </div>
+
+                <div class="error-state" id="errorState" style="display: none;">
+                    <div class="error-content">
+                        <div class="error-icon">⚠️</div>
+                        <h3>Не удалось загрузить заказы</h3>
+                        <p>Проверьте соединение и попробуйте еще раз</p>
+                        <button class="btn btn-primary" id="retryBtn">Повторить</button>
+                    </div>
+                </div>
+
+                <!-- Контейнер для заказов -->
+                <div class="orders-container" id="purchasesList">
+                    <div class="empty-state">
+                        <div class="empty-icon">📦</div>
+                        <h3>Пока нет заказов</h3>
+                        <p>Совершите первую покупку!</p>
+                        <a href="index.html" class="btn btn-primary">Начать покупки</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer остается без изменений -->
+        <footer class="site-footer" role="contentinfo" aria-label="Футер">
+            <!-- ... footer content ... -->
+        </footer>
+    </div>
+
+    <script src="js/router.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/orders.js"></script>
+</body>
+</html>

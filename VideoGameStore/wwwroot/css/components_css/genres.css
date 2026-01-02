@@ -1,0 +1,535 @@
+/* ========== СТИЛИ ДЛЯ ЖАНРОВ ========== */
+
+/* Оверлей с жанрами */
+.genres-overlay {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: -450px;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none; 
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    padding-top: 0;
+    animation: fadeIn 0.2s ease;
+}
+
+/* Меню жанров */
+.genres-menu {
+    background: #FFFFFF;
+    border-radius: 24px;
+    box-sizing: border-box;
+    padding: 24px 32px;
+    color: #111;
+    max-width: 900px;
+    width: 90%;
+    max-height: 70vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s ease-out;
+    outline: none;
+}
+
+/* Заголовок меню */
+.genres-header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #E0E0E0;
+    margin-bottom: 20px;
+}
+
+.genres-title {
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #222;
+    margin: 0;
+    text-align: center;
+}
+
+/* Кнопки действий */
+.genres-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.clear-btn {
+    background: transparent;
+    border: 1px solid #FF4757;
+    color: #FF4757;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.clear-btn:hover:not(:disabled) {
+    background: #FFEBEE;
+}
+
+.clear-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.apply-btn {
+    background: #A53DFF;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.apply-btn:hover {
+    background: #8C2BD9;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px 12px;
+    color: #666;
+    border-radius: 8px;
+    font-weight: 300;
+    transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: #222;
+}
+
+/* Контейнер для списка жанров */
+.genres-inner {
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 8px;
+}
+
+/* Список жанров (grid) - ИЗМЕНЕНО на FLEX */
+.genres-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+}
+
+/* Кнопка жанра - ИЗМЕНЕНО */
+.genre-btn {
+    background: #F8F8F8;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+    text-align: center;
+}
+
+.genre-btn:hover {
+    background: #F0F0F0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.genre-btn.selected {
+    background: rgba(165, 61, 255, 0.15);
+    border: 1px solid rgba(165, 61, 255, 0.3);
+    color: #A53DFF;
+    box-shadow: 0 4px 12px rgba(165, 61, 255, 0.2);
+}
+
+/* Кастомный скроллбар */
+.genres-inner::-webkit-scrollbar {
+    width: 6px;
+}
+
+.genres-inner::-webkit-scrollbar-thumb {
+    background: rgba(165, 61, 255, 0.3);
+    border-radius: 8px;
+}
+
+.genres-inner::-webkit-scrollbar-thumb:hover {
+    background: rgba(165, 61, 255, 0.5);
+}
+
+.genres-inner::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* ========== ВЫБРАННЫЕ ЖАНРЫ (ПОД ФИЛЬТРОМ ЦЕНЫ) ========== */
+.active-genres-filters {
+    width: 600px;
+    max-width: 90%;
+    margin: 15px auto 0;
+    background: #E2E2E2;
+    border-radius: 30px;
+    padding: 10px 18px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.3s ease;
+    display: none; /* По умолчанию скрыто */
+}
+
+.active-genres-filters:not(.hidden) {
+    display: block;
+}
+
+.active-filters-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filters-label {
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #444;
+    white-space: nowrap;
+}
+
+.filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex: 1;
+}
+
+.filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(165, 61, 255, 0.1);
+    border: 1px solid rgba(165, 61, 255, 0.2);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-size: 14px;
+    color: #333;
+    animation: fadeIn 0.3s ease;
+}
+
+.remove-filter-btn {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-left: 4px;
+}
+
+.remove-filter-btn:hover {
+    background: rgba(255, 71, 87, 0.1);
+    color: #FF4757;
+}
+
+.clear-filters-btn {
+    background: transparent;
+    border: 1px solid #FF4757;
+    color: #FF4757;
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.clear-filters-btn:hover {
+    background: #FFEBEE;
+}
+
+/* Скрытый класс */
+.hidden {
+    display: none !important;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ========== АДАПТИВНОСТЬ ========== */
+@media (max-width: 900px) {
+    .genres-menu {
+        width: 95%;
+        padding: 20px 24px;
+    }
+    
+    .genres-title {
+        font-size: 24px;
+    }
+    
+    .genre-btn {
+        font-size: 15px;
+        padding: 10px 16px;
+        min-width: 100px;
+    }
+    
+    .genres-list {
+        gap: 10px;
+    }
+    
+    .active-genres-filters {
+        width: 95%;
+    }
+}
+
+@media (max-width: 768px) {
+    .genres-overlay {
+        padding-top: 60px;
+        align-items: center;
+    }
+    
+    .genres-menu {
+        max-height: 80vh;
+        max-width: 95%;
+    }
+    
+    .genres-title {
+        font-size: 22px;
+    }
+    
+    .genres-actions {
+        flex-direction: row;
+        gap: 8px;
+    }
+    
+    .clear-btn,
+    .apply-btn {
+        width: auto;
+    }
+    
+    .active-filters-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .filter-tags {
+        width: 100%;
+    }
+    
+    .clear-filters-btn {
+        align-self: flex-end;
+    }
+    
+    .genres-list {
+        justify-content: center;
+    }
+    
+    .genre-btn {
+        min-width: 90px;
+        font-size: 14px;
+        padding: 8px 14px;
+    }
+}
+
+@media (max-width: 600px) {
+    .genres-overlay {
+        padding-top: 40px;
+    }
+    
+    .genres-menu {
+        padding: 16px 20px;
+        border-radius: 20px;
+        width: 90%;
+    }
+    
+    .genres-title {
+        font-size: 20px;
+    }
+    
+    .genres-actions {
+        flex-wrap: wrap;
+    }
+    
+    .clear-btn,
+    .apply-btn,
+    .close-btn {
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+    
+    .genre-btn {
+        min-width: 80px;
+        font-size: 13px;
+        padding: 6px 12px;
+    }
+    
+    .active-genres-filters {
+        padding: 12px 16px;
+        width: 90%;
+    }
+    
+    .filters-label {
+        font-size: 15px;
+    }
+    
+    .filter-tag {
+        font-size: 13px;
+        padding: 4px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .genres-overlay {
+        padding-top: 30px;
+    }
+    
+    .genres-menu {
+        padding: 14px 16px;
+        width: 92%;
+    }
+    
+    .genres-title {
+        font-size: 18px;
+    }
+    
+    .genres-actions {
+        flex-direction: column;
+    }
+    
+    .clear-btn,
+    .apply-btn {
+        width: 100%;
+    }
+    
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+    
+    .genres-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .genre-btn {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .active-genres-filters {
+        width: 92%;
+        padding: 10px 12px;
+    }
+    
+    .filters-label {
+        font-size: 14px;
+    }
+    
+    .clear-filters-btn {
+        font-size: 13px;
+        padding: 4px 10px;
+    }
+}
+
+@media (max-width: 375px) {
+    .genres-menu {
+        width: 96%;
+        padding: 12px 14px;
+    }
+    
+    .genres-title {
+        font-size: 17px;
+    }
+    
+    .genre-btn {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+    
+    .active-genres-filters {
+        width: 96%;
+        padding: 8px 10px;
+    }
+    
+    .filters-label {
+        font-size: 13px;
+    }
+    
+    .filter-tag {
+        font-size: 12px;
+        padding: 3px 8px;
+    }
+}
+
+/* Стили для фильтра по цене (дополнительно) */
+.price-filter {
+    width: 600px;
+    max-width: 90%;
+    margin: 20px auto 0;
+    background: #E2E2E2;
+    border-radius: 30px;
+    padding: 15px 24px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+.filter-info {
+    text-align: center;
+    margin-top: 10px;
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-size: 14px;
+    color: #666;
+}
