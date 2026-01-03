@@ -10,8 +10,6 @@ namespace VideoGameStore.Utils
         public static async Task<Page<Dto>> ToPageAsync<Entity, Dto>(this IQueryable<Entity> source, Pageable pageable, 
             Func<Entity, Dto> map, List<Expression<Func<Entity, bool>>>? predicates) where Entity : BaseEntity
         {
-            int total = await source.CountAsync();
-
             if(predicates != null)
             {
                 foreach (var predicate in predicates)
@@ -19,6 +17,8 @@ namespace VideoGameStore.Utils
                     source = source.Where(predicate);
                 }
             }
+
+            int totalElements = await source.CountAsync();
 
             List<Entity> items = await source
                 .OrderBy(i => i.Id)
@@ -28,7 +28,7 @@ namespace VideoGameStore.Utils
 
             List<Dto> result = items.Select(i => map.Invoke(i)).ToList();
 
-            return new Page<Dto>(result, pageable.Page, pageable.PageSize, total, (total + pageable.PageSize - 1) / pageable.PageSize);
+            return new Page<Dto>(result, pageable.Page, pageable.PageSize, totalElements, (totalElements + pageable.PageSize - 1) / pageable.PageSize);
         }
     }
 }

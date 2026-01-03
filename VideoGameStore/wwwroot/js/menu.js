@@ -15,6 +15,17 @@ class MenuManager {
 
         // Затем настраиваем слушатели событий
         this.setupEventListeners();
+
+        const cart = document.getElementById('cartLink');
+
+        const userJson = localStorage.getItem("currentUser")
+        if (userJson) {
+            const user = JSON.parse(userJson);
+
+            if (user && user.isAuthenticated && user.role === "CUSTOMER") {
+                cart.style.display = "flex";
+            }
+        }
     }
 
     hideMenu() {

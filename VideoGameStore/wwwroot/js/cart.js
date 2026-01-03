@@ -120,23 +120,17 @@ class CartPage {
 
     async updateCartItem(gameId, delta) {
         try {
-            const cart = await api.getCart();
-            const items = cart?.CartItems || cart?.cartItems || [];
-            const item = items.find(i => (i.GameId || i.gameId) == gameId);
-
-            if (item) {
-                const currentQty = item.Quantity ?? item.quantity ?? 0;
-                const newQuantity = currentQty + delta;
-                if (newQuantity <= 0) {
-                    await api.removeFromCart(gameId, currentQty);
-                } else {
-                    // addToCart increases by quantity
-                    await api.addToCart(gameId, delta);
-                }
-                await this.loadCart();
+            if (delta > 0) {
+                // Увеличение: добавляем
+                await api.addToCart(gameId, delta);
+            } else if (delta < 0) {
+                // Уменьшение: удаляем 1 шт
+                await api.removeFromCart(gameId, Math.abs(delta));
             }
+            await this.loadCart();
         } catch (error) {
-            console.error('Failed to update cart:', error);
+            console.error('Failed to update cart item:', error);
+            alert('Не удалось обновить товар в корзине');
         }
     }
 

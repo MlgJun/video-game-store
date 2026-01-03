@@ -32,6 +32,20 @@ body {
     min-height: 300px; /* Минимальная высота для красивого отображения */
 }
 
+.purchase-header {
+    padding: 16px 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.purchase-title {
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #2c7be5;
+    line-height: 1.2;
+}
+
 /* Заголовок секции */
 .purchase-history-header {
     display: flex;

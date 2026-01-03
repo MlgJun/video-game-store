@@ -1,7 +1,7 @@
 /* product_view.css - стили для модального окна просмотра товара */
 
 /* Модальное окно */
-.modal-overlay.view {
+/*.modal-overlay.view {
     position: fixed;
     top: 0;
     left: 0;
@@ -33,20 +33,20 @@
 
 .product-view-details {
     width: 1505px;
-    max-width: calc(100vw - 40px); /* Урезаем по краям */
-    height: auto;
+    max-width: calc(100vw - 40px);*/ /* Урезаем по краям */
+    /*height: auto;
     max-height: 865px;
     background: #EFEFEF;
     border: 8px solid #A53DFF;
     border-radius: 30px;
     display: flex;
-    gap: 60px; /* ДОБАВЛЕНО: Большой отступ между секциями */
-    padding: 30px;
+    gap: 60px;*/ /* ДОБАВЛЕНО: Большой отступ между секциями */
+    /*padding: 30px;
     box-sizing: border-box;
     font-family: 'Montserrat Alternates', sans-serif;
     position: relative;
-    margin: 0 auto; /* Центрируем */
-}
+    margin: 0 auto;*/ /* Центрируем */
+/*}
 
 .view-main-image-wrapper {
   display: flex;
@@ -132,12 +132,12 @@
     font-size: 16px;
     font-weight: 600;
     text-align: left;
-}
+}*/
 
 /* Правая секция */
-.view-right-section {
-    flex: 0 0 420px; /* Увеличил с 372px до 420px */
-    display: flex;
+/*.view-right-section {
+    flex: 0 0 420px;*/ /* Увеличил с 372px до 420px */
+    /*display: flex;
     flex-direction: column;
     gap: 20px;
     padding: 0;
@@ -243,10 +243,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-}
+}*/
 
 /* Стили для отображения выбранных жанров */
-.view-genres-container {
+/*.view-genres-container {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -270,10 +270,10 @@
     font-size: 13px;
     display: inline-block;
     margin: 0 0 8px 0;
-}
+}*/
 
 /* Кнопки действий */
-.view-buttons-section {
+/*.view-buttons-section {
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -329,27 +329,27 @@
     cursor: not-allowed;
     transform: none !important;
     box-shadow: none !important;
-}
+}*/
 
 /* Адаптивность модального окна */
-@media (max-width: 1600px) {
+/*@media (max-width: 1600px) {
     .product-view-details {
-        width: calc(100vw - 60px); /* Урезаем больше по краям */
-        padding: 20px;
-        gap: 50px; /* Уменьшаем gap */
-    }
+        width: calc(100vw - 60px);*/ /* Урезаем больше по краям */
+        /*padding: 20px;
+        gap: 50px;*/ /* Уменьшаем gap */
+    /*}
     
     .view-left-section {
         flex: 1;
     }
     
     .view-right-section {
-        flex: 0 0 380px; /* Адаптированный размер для 1600px */
-    }
+        flex: 0 0 380px;*/ /* Адаптированный размер для 1600px */
+    /*}
     
     .view-right-section::before {
-        left: -25px; /* Адаптируем позицию линии под новый gap */
-    }
+        left: -25px;*/ /* Адаптируем позицию линии под новый gap */
+    /*}
     
     .view-main-image-wrapper {
         height: 350px;
@@ -358,22 +358,22 @@
 
 @media (max-width: 1400px) {
     .product-view-details {
-        width: calc(100vw - 80px); /* Еще больше урезаем */
-        padding: 15px;
-        gap: 40px; /* Уменьшаем gap */
-    }
+        width: calc(100vw - 80px);*/ /* Еще больше урезаем */
+        /*padding: 15px;
+        gap: 40px;*/ /* Уменьшаем gap */
+    /*}
     
     .view-left-section {
         padding-right: 0;
     }
     
     .view-right-section {
-        flex: 0 0 350px; /* Адаптированный размер для 1400px */
-    }
+        flex: 0 0 350px;*/ /* Адаптированный размер для 1400px */
+    /*}
     
     .view-right-section::before {
-        left: -20px; /* Адаптируем позицию линии под новый gap */
-    }
+        left: -20px;*/ /* Адаптируем позицию линии под новый gap */
+    /*}
     
     .view-main-image-wrapper {
         height: 320px;
@@ -387,8 +387,8 @@
         width: calc(100vw - 40px);
         max-height: 90vh;
         padding: 20px;
-        gap: 20px; /* Становится вертикальным gap */
-    }
+        gap: 20px;*/ /* Становится вертикальным gap */
+    /*}
     
     .view-left-section,
     .view-right-section {
@@ -398,19 +398,19 @@
     }
     
     .view-right-section::before {
-        display: none; /* Убираем вертикальную линию на мобильных */
-    }
+        display: none;*/ /* Убираем вертикальную линию на мобильных */
+    /*}
     
     .view-left-section {
         padding-bottom: 20px;
         margin-bottom: 20px;
-        border-bottom: 1px solid #D0D0D0; /* Горизонтальная линия вместо вертикальной */
-    }
+        border-bottom: 1px solid #D0D0D0;*/ /* Горизонтальная линия вместо вертикальной */
+    /*}
     
     .view-right-section {
         padding-top: 20px;
-        border-top: 1px solid #D0D0D0; /* Вторая горизонтальная линия для симметрии */
-    }
+        border-top: 1px solid #D0D0D0;*/ /* Вторая горизонтальная линия для симметрии */
+    /*}
     
     .view-main-image-wrapper {
         height: 300px;
@@ -590,10 +590,10 @@
     .view-right-section {
         padding-top: 8px;
     }
-}
+}*/
 
 /* Убираем скроллбар в некоторых браузерах */
-.product-view-modal::-webkit-scrollbar {
+/*.product-view-modal::-webkit-scrollbar {
     width: 6px;
 }
 
@@ -609,4 +609,4 @@
 
 .product-view-modal::-webkit-scrollbar-thumb:hover {
     background: #8B1FD9;
-}
+}*/

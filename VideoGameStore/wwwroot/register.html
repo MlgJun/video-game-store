@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/components_css/header.css">
     <link rel="stylesheet" href="css/components_css/footer.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;600&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet" href="css/components_css/menu.css">
 </head>
 <body>
@@ -24,20 +25,13 @@
                 </div>
 
                 <div class="header-right">
-                    <a href="" class="action-btn cart-btn">
-                        <!-- SVG иконка корзины -->
-                        <svg class="icon cart-icon" viewBox="59 55 28 29" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <path d="M87 67.5001V68.5001C87 69.3285 86.4777 70.0001 85.8333 70.0001H85.4444L84.1751 81.4243C84.0109 82.9022 83.0264 84 81.8652 84H64.1348C62.9736 84 61.9891 82.9022 61.8249 81.4243L60.5556 70.0001H60.1667C59.5223 70.0001 59 69.3285 59 68.5001V67.5001C59 66.6717 59.5223 66.0001 60.1667 66.0001H63.4402L68.6309 56.8239C69.1362 55.9306 70.109 55.7331 70.8038 56.3827C71.4986 57.0324 71.6523 58.2832 71.1469 59.1765L67.2871 66.0001H78.7129L74.8531 59.1765C74.3477 58.2832 74.5014 57.0324 75.1962 56.3827C75.8909 55.733 76.8639 55.9305 77.3692 56.8238L82.5598 66.0001H85.8333C86.4777 66.0001 87 66.6717 87 67.5001ZM74.1667 78.5V71.5001C74.1667 70.6716 73.6443 70.0001 73 70.0001C72.3557 70.0001 71.8333 70.6716 71.8333 71.5001V78.5C71.8333 79.3285 72.3557 80 73 80C73.6443 80 74.1667 79.3285 74.1667 78.5ZM79.6111 78.5V71.5001C79.6111 70.6716 79.0888 70.0001 78.4444 70.0001C77.8001 70.0001 77.2778 70.6716 77.2778 71.5001V78.5C77.2778 79.3285 77.8001 80 78.4444 80C79.0888 80 79.6111 79.3285 79.6111 78.5ZM68.7222 78.5V71.5001C68.7222 70.6716 68.1999 70.0001 67.5556 70.0001C66.9112 70.0001 66.3889 70.6716 66.3889 71.5001V78.5C66.3889 79.3285 66.9112 80 67.5556 80C68.1999 80 68.7222 79.3285 68.7222 78.5Z" fill="currentColor" />
+                    <button class="action-btn user-btn" id="userMenuToggle">
+                        <svg class="icon user-icon" viewBox="107 56 26 28" xmlns="http://www.w3.org/2000/svg"
+                             aria-hidden="true">
+                            <path d="M120 70C121.97 70 123.86 69.2625 125.253 67.9497C126.646 66.637 127.429 64.8565 127.429 63C127.429 61.1435 126.646 59.363 125.253 58.0503C123.86 56.7375 121.97 56 120 56C118.03 56 116.14 56.7375 114.747 58.0503C113.354 59.363 112.571 61.1435 112.571 63C112.571 64.8565 113.354 66.637 114.747 67.9497C116.14 69.2625 118.03 70 120 70ZM117.348 72.625C111.631 72.625 107 76.9891 107 82.3758C107 83.2727 107.772 84 108.724 84H131.276C132.228 84 133 83.2727 133 82.3758C133 76.9891 128.369 72.625 122.652 72.625H117.348Z"
+                                  fill="currentColor" />
                         </svg>
-                        <span class="action-label">Корзина</span>
-                    </a>
-
-                    <button type="button" class="action-btn user-btn">
-                        <!-- SVG иконка пользователя -->
-                        <svg class="icon user-icon" viewBox="107 56 26 28" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <path d="M120 70C121.97 70 123.86 69.2625 125.253 67.9497C126.646 66.637 127.429 64.8565 127.429 63C127.429 61.1435 126.646 59.363 125.253 58.0503C123.86 56.7375 121.97 56 120 56C118.03 56 116.14 56.7375 114.747 58.0503C113.354 59.363 112.571 61.1435 112.571 63C112.571 64.8565 113.354 66.637 114.747 67.9497C116.14 69.2625 118.03 70 120 70ZM117.348 72.625C111.631 72.625 107 76.9891 107 82.3758C107 83.2727 107.772 84 108.724 84H131.276C132.228 84 133 83.2727 133 82.3758C133 76.9891 128.369 72.625 122.652 72.625H117.348Z" fill="currentColor" />
-                        </svg>
-                        <span class="action-label">Войти</span>
+                        <span class="action-label" id="userMenuLabel">Профиль</span>
                     </button>
                 </div>
             </div>
@@ -48,20 +42,88 @@
             <!-- Меню гостя -->
             <div id="guestMenu" class="menu-overlay guest-menu">
                 <div class="menu-container" role="dialog" aria-label="Меню неавторизованного пользователя">
-                    <button class="menu-button" id="mainMenuBtn">
-                        <img src="assets/icons/buy.svg" alt="" class="menu-icon" />
-                        <span>Главная</span>
-                    </button>
+                    <nav class="menu-nav">
+                        <button class="menu-button" id="mainMenuBtn">
+                            <img src="assets/icons/buy.svg" alt="" class="menu-icon" />
+                            <span>Главная</span>
+                        </button>
+                        <button class="menu-button" id="loginMenuBtn">
+                            <img src="assets/icons/user.svg" alt="" class="menu-icon" />
+                            <span>Вход в аккаунт</span>
+                        </button>
+                        <button class="menu-button" id="registerMenuBtn">
+                            <img src="assets/icons/registration.svg" alt="" class="menu-icon" />
+                            <span>Регистрация</span>
+                        </button>
+                    </nav>
+                </div>
+            </div>
 
-                    <button class="menu-button" id="loginMenuBtn">
-                        <img src="assets/icons/user.svg" alt="" class="menu-icon" />
-                        <span>Вход в аккаунт</span>
-                    </button>
+            <!-- Меню покупателя -->
+            <div id="userMenu" class="menu-overlay user-menu">
+                <div class="menu-container" role="dialog" aria-label="Меню покупателя">
+                    <div class="menu-header">
+                        <div class="user-avatar" id="userAvatar">П</div>
+                        <div class="user-details">
+                            <div class="user-name" id="userName">Пользователь</div>
+                            <div class="user-email" id="userEmail"></div>
+                            <div class="user-role">Покупатель</div>
+                        </div>
+                    </div>
+                    <nav class="menu-nav">
+                        <button class="menu-button" id="mainUserMenuBtn">
+                            <img src="assets/icons/buy.svg" alt="" class="menu-icon" />
+                            <span>Главная</span>
+                        </button>
+                        <button class="menu-button" id="ordersMenuBtn">
+                            <img src="assets/icons/history.svg" alt="" class="menu-icon" />
+                            <span>История заказов</span>
+                        </button>
+                        <button class="menu-button" id="cartMenuBtn">
+                            <img src="assets/icons/shopping-cart.svg" alt="" class="menu-icon" />
+                            <span>Корзина</span>
+                        </button>
+                        <button class="menu-button" id="userLogoutBtn">
+                            <img src="assets/icons/logout.svg" alt="" class="menu-icon" />
+                            <span>Выйти</span>
+                        </button>
+                    </nav>
+                </div>
+            </div>
 
-                    <button class="menu-button" id="registerMenuBtn">
-                        <img src="assets/icons/registration.svg" alt="" class="menu-icon" />
-                        <span>Регистрация</span>
-                    </button>
+            <!-- Меню продавца -->
+            <div id="sellerMenu" class="menu-overlay seller-menu">
+                <div class="menu-container" role="dialog" aria-label="Меню продавца">
+                    <!-- Заголовок с информацией -->
+                    <div class="menu-header">
+                        <div class="seller-avatar" id="sellerAvatar">П</div>
+                        <div class="seller-details">
+                            <div class="seller-name" id="sellerName">Продавец</div>
+                            <div class="seller-email" id="sellerEmail"></div>
+                            <div class="seller-role">Продавец</div>
+                            <div class="seller-stats">
+                                <span class="stat-item">Игр: <span id="sellerGamesCount">0</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Навигация -->
+                    <nav class="menu-nav">
+                        <button class="menu-button" id="mainSellerMenuBtn">
+                            <img src="assets/icons/buy.svg" alt="" class="menu-icon" />
+                            <span>Главная</span>
+                        </button>
+
+                        <button class="menu-button" id="sellerGamesMenuBtn">
+                            <img src="assets/icons/product.svg" alt="" class="menu-icon" />
+                            <span>Мои товары</span>
+                        </button>
+
+                        <button class="menu-button" id="sellerLogoutBtn">
+                            <img src="assets/icons/logout.svg" alt="" class="menu-icon" />
+                            <span>Выйти</span>
+                        </button>
+                    </nav>
                 </div>
             </div>
         </div>

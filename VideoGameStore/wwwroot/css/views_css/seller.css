@@ -13,7 +13,7 @@
 body {
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
     min-height: 100vh;
-    color: #333;
+    color: white;
     line-height: 1.6;
 }
 
@@ -318,6 +318,7 @@ body {
     text-decoration: none;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
 }
 
@@ -540,6 +541,8 @@ body {
     }
 
 .modal-content {
+    padding-left: 15px;
+    padding-right: 15px;
     background: white;
     border-radius: 28px;
     max-width: 600px;
@@ -675,6 +678,58 @@ body {
     border-top: 1px solid rgba(0,0,0,0.08);
     margin-top: auto;
 }
+.keys-modal {
+    margin: 0 auto;
+}
+
+.keys-form {
+    padding: 20px 0;
+}
+
+    .keys-form .form-group.full {
+        margin-bottom: 24px;
+    }
+
+    .keys-form input[type="file"] {
+        width: 100%;
+        padding: 12px;
+        border: 2px dashed #e2e8f0;
+        border-radius: 12px;
+        background: #f8fafc;
+        transition: all 0.3s ease;
+    }
+
+        .keys-form input[type="file"]:focus,
+        .keys-form input[type="file"]:hover {
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+.form-hint {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.875rem;
+    color: #64748b;
+    font-style: italic;
+}
+
+/*  нопки на всю ширину */
+.keys-form .form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.keys-form .btn-primary,
+.keys-form .btn-secondary {
+    flex: 1;
+    padding: 14px 20px;
+    font-size: 1rem;
+    font-weight: 500;
+}
 
 /* ============================================
    RESPONSIVE
@@ -716,6 +771,23 @@ body {
         width: 100vw;
     }
 }
+
+.btn-keys {
+    background: rgba(59, 130, 246, 0.9);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .btn-keys:hover {
+        background: rgba(59, 130, 246, 1);
+        transform: scale(1.1);
+    }
 
 @media (max-width: 480px) {
     .stats {

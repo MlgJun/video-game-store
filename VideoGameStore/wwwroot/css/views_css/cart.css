@@ -81,6 +81,7 @@ body {
     max-width: 1200px;
     display: flex;
     gap: 30px;
+    margin-top: 25px;
     padding: 0;
     box-sizing: border-box;
     align-items: flex-start;
@@ -290,7 +291,7 @@ body {
 .item-price {
     font-size: 18px;
     font-weight: 600;
-    color: #A53DFF;
+    color: #2c7be5;
 }
 
 .item-quantity {
@@ -351,15 +352,35 @@ body {
 }
 
 .delete-btn {
-    background: #ff4444;
-    color: white;
+    background: #cc0000 !important;
+    color: white !important;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Montserrat Alternates', sans-serif;
+    transition: all 0.2s;
 }
 
-.delete-btn:hover {
-    background: #cc0000;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(255, 68, 68, 0.2);
-}
+    .delete-btn:hover,
+    .delete-btn:active,
+    .delete-btn:focus {
+        background: #b30000 !important; /* чуть темнее при взаимодействии */
+        color: white !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(204, 0, 0, 0.3) !important;
+    }
+
+    .delete-btn:disabled {
+        background: #ff6666 !important;
+        color: white !important;
+        opacity: 1 !important;
+        cursor: not-allowed !important;
+        transform: none !important;
+        box-shadow: none !important;
+    }
 
 /* Пустая корзина */
 .cart-empty {
@@ -397,7 +418,7 @@ body {
 }
 
 .empty-link {
-    background: #A53DFF;
+    background: #2c7be5;
     color: white;
     border: none;
     border-radius: 8px;
@@ -450,13 +471,13 @@ body {
 
 .summary-price {
     font-size: 36px;
-    color: #A53DFF;
+    color: #2c7be5;
     font-weight: 700;
     margin: 10px 0;
 }
 
 .order-btn {
-    background: #A53DFF;
+    background: #2c7be5;
     color: #fff;
     border: none;
     border-radius: 10px;

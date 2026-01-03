@@ -2,14 +2,12 @@
 .menu-fixed-container {
     position: fixed;
     top: 164px;
-    right: 50px; 
-    width: 420px; 
+    right: 50px;
+    width: 420px;
     z-index: 1001;
     pointer-events: none;
     display: none;
 }
-
-
 
 /* ========== ОБЩИЕ СТИЛИ МЕНЮ ========== */
 .menu-overlay {
@@ -17,32 +15,32 @@
     position: static;
 }
 
+    .menu-overlay.show {
+        display: block;
+    }
+
 .menu-container {
     background: rgba(34, 34, 34, 0.98);
     backdrop-filter: blur(10px);
     border-radius: 0 0 30px 30px;
     display: flex;
     flex-direction: column;
+    padding: 16px 0;
     box-sizing: border-box;
     font-family: 'Montserrat Alternates', sans-serif;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-top: none;
     pointer-events: auto;
-    z-index: 1002;
     width: 100%;
-    /* Фиксированное положение относительно контейнера */
     position: relative;
-    height: 164px;
+    min-height: 164px;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
-/* Когда меню показано */
-.menu-overlay.show {
-    display: block;
-}
-
+/* Анимация появления */
 .menu-overlay.show .menu-container {
-    display: flex;
     animation: menuEnter 0.3s ease-out;
 }
 
@@ -51,99 +49,25 @@
         opacity: 0;
         transform: translateY(-10px) scale(0.95);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
     }
 }
 
-/* ========== КНОПКИ МЕНЮ ========== */
-.menu-button {
-    width: 100%;
-    height: 50px;
-    background-color: rgba(39, 39, 39, 0.95);
-    border-radius: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    box-sizing: border-box;
-    color: #FFFFFF;
-    font-family: 'Montserrat Alternates', sans-serif;
-    font-size: 16px;
-    position: relative;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    text-align: center;
-    border: none;
-    /* Новое: текст по центру, иконки слева */
-    justify-content: flex-start;
-    gap: 12px;
-}
-
-/* Контейнер для текста, который будет по центру */
-.menu-button span {
-    flex: 1;
-    text-align: center;
-    margin-left: -36px; /* Компенсируем ширину иконки + gap */
-}
-
-.menu-button:hover {
-    background-color: rgba(165, 61, 255, 0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(165, 61, 255, 0.2);
-    border-color: #A53DFF;
-}
-
-.menu-button:active {
-    transform: translateY(0) scale(0.985);
-    box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.35);
-}
-
-.menu-button:focus-visible {
-    outline: 2px solid #A53DFF;
-    outline-offset: 2px;
-}
-
-.menu-icon {
-    width: 24px;
-    height: 24px;
-    filter: brightness(0) invert(1);
-    transition: filter 0.2s ease;
-    flex-shrink: 0;
-    /* Иконка остается слева */
-    margin-right: auto;
-}
-
-.menu-button:hover .menu-icon {
-    filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(250deg);
-}
-
-/* ========== МЕНЮ ГОСТЯ ========== */
-.guest-menu {
-    height: 164px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-}
-
-/* ========== МЕНЮ ПОЛЬЗОВАТЕЛЯ ========== */
-.user-menu {
-    height: 164px;
-}
-
-.user-info {
+/* ========== ЗАГОЛОВОК МЕНЮ (для авторизованных) ========== */
+.menu-header {
     display: flex;
     align-items: center;
     gap: 16px;
-    padding-bottom: 20px;
-    margin-bottom: 16px;
+    padding: 0 20px 16px;
+    margin: 0 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.user-avatar {
+.user-avatar,
+.seller-avatar {
     width: 50px;
     height: 50px;
     background: linear-gradient(135deg, #A53DFF 0%, #8C2BD9 100%);
@@ -158,7 +82,8 @@
     flex-shrink: 0;
 }
 
-.user-details {
+.user-details,
+.seller-details {
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -166,7 +91,8 @@
     flex: 1;
 }
 
-.user-name {
+.user-name,
+.seller-name {
     font-size: 18px;
     font-weight: 600;
     color: white;
@@ -175,7 +101,8 @@
     text-overflow: ellipsis;
 }
 
-.user-email {
+.user-email,
+.seller-email {
     font-size: 14px;
     color: rgba(255, 255, 255, 0.7);
     font-family: 'Montserrat', sans-serif;
@@ -184,7 +111,8 @@
     text-overflow: ellipsis;
 }
 
-.user-role {
+.user-role,
+.seller-role {
     font-size: 12px;
     color: #A53DFF;
     font-weight: 500;
@@ -196,36 +124,69 @@
     align-self: flex-start;
 }
 
-.user-nav {
+/* Статистика для продавца */
+.seller-stats {
+    margin-top: 6px;
+    display: flex;
+    gap: 16px;
+}
+
+.stat-item {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Montserrat', sans-serif;
+}
+
+    .stat-item span {
+        color: #A53DFF;
+        font-weight: 600;
+    }
+
+/* ========== НАВИГАЦИЯ — КНОПКИ МЕНЮ ========== */
+.menu-nav {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    padding: 0 20px;
     flex: 1;
 }
 
-/* ========== МЕНЮ ПРОДАВЦА ========== */
-.seller-menu {
-    height: 164px;
+.menu-button {
+    width: 100%;
+    height: 50px;
+    background-color: rgba(39, 39, 39, 0.95);
+    border-radius: 30px;
+    border: none;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
 }
 
-/* Для кнопок в меню продавца с таким же выравниванием текста */
-.seller-nav .menu-button span {
-    flex: 1;
-    text-align: center;
-    margin-left: -36px;
-}
+    .menu-button .menu-icon {
+        width: 24px;
+        height: 24px;
+        filter: brightness(0) invert(1);
+        transition: filter 0.2s ease;
+        flex-shrink: 0;
+        margin-right: 16px;
+    }
 
-.seller-nav .menu-button:hover {
-    background-color: rgba(76, 175, 80, 0.2);
-    border-color: #4CAF50;
-    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
-}
+    .menu-button span {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: left;
+    }
 
-.seller-nav .menu-button:hover .menu-icon {
-    filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(90deg);
-}
-
-/* Бейджи в кнопках меню */
+/* Бейдж (например, кол-во товаров в корзине) */
 .menu-badge {
     background: #A53DFF;
     color: white;
@@ -234,24 +195,35 @@
     font-size: 12px;
     font-weight: 600;
     font-family: 'Montserrat', sans-serif;
-    margin-left: auto;
-    margin-right: 0;
-    /* Убираем компенсацию для бейджей */
-    margin-left: 0;
+    flex-shrink: 0;
 }
 
-/* Корректировка для кнопок с бейджами */
-.menu-button:has(.menu-badge) span {
-    margin-left: 0;
-    text-align: left;
-    flex: none;
+/* Hover-эффекты */
+.menu-button:hover {
+    background-color: rgba(165, 61, 255, 0.2);
+    border-color: #A53DFF;
+    box-shadow: 0 5px 15px rgba(165, 61, 255, 0.2);
+}
+
+    .menu-button:hover .menu-icon {
+        filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(250deg);
+    }
+
+.menu-button:active {
+    transform: scale(0.985);
+    box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.35);
+}
+
+.menu-button:focus-visible {
+    outline: 2px solid #A53DFF;
+    outline-offset: 2px;
 }
 
 /* ========== АДАПТИВНОСТЬ ========== */
 
 @media (max-width: 1600px) {
     .menu-fixed-container {
-        right: 40px; /* Еще левее для больших экранов */
+        right: 40px;
     }
 }
 
@@ -269,10 +241,6 @@
         width: 350px;
         right: 30px;
     }
-    
-    .guest-menu {
-        height: 190px;
-    }
 }
 
 @media (max-width: 1100px) {
@@ -281,18 +249,21 @@
         width: 320px;
         right: 25px;
     }
-    
-    .menu-button span {
-        margin-left: -32px;
-    }
-    
-    .menu-icon {
+
+    .menu-button .menu-icon {
         width: 22px;
         height: 22px;
+        margin-right: 12px;
+    }
+
+    .menu-button {
+        height: 48px;
+        font-size: 15px;
+        padding: 0 18px;
     }
 }
 
-/* Мобильные устройства - меню на всю ширину */
+/* Мобильные устройства */
 @media (max-width: 1024px) {
     .menu-fixed-container {
         top: auto;
@@ -302,7 +273,7 @@
         width: 100%;
         height: auto;
     }
-    
+
     .menu-overlay {
         position: fixed;
         top: 0;
@@ -312,7 +283,7 @@
         background: rgba(0, 0, 0, 0.5);
         z-index: 1000;
     }
-    
+
     .menu-container {
         position: fixed;
         bottom: 0;
@@ -320,25 +291,25 @@
         right: 0;
         border-radius: 20px 20px 0 0;
         max-height: 80vh;
-        overflow-y: auto;
         width: 100%;
         animation: slideUp 0.3s ease-out;
     }
-    
-    .menu-overlay.show .menu-container {
-        animation: slideUp 0.3s ease-out;
-    }
-    
+
     @keyframes slideUp {
         from {
             transform: translateY(100%);
         }
+
         to {
             transform: translateY(0);
         }
     }
-    
-    .menu-fixed-container .menu-overlay.show {
+
+    .menu-overlay.show .menu-container {
+        animation: slideUp 0.3s ease-out;
+    }
+
+    .menu-overlay.show {
         display: block;
     }
 }
@@ -347,48 +318,31 @@
     .menu-container {
         padding: 20px 16px 16px;
     }
-    
-    .guest-menu {
-        height: 190px;
-    }
-    
-    .user-menu {
-        height: 300px;
-    }
-    
-    .seller-menu {
-        height: 420px;
-    }
-    
+
     .menu-button {
         height: 44px;
         font-size: 15px;
         padding: 0 16px;
     }
-    
-    .menu-button span {
-        margin-left: -28px;
-    }
-    
-    .menu-icon {
-        width: 20px;
-        height: 20px;
-    }
+
+        .menu-button .menu-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+        }
 }
 
 @media (max-width: 480px) {
-    .menu-container {
-        border-radius: 20px 20px 0 0;
-    }
-    
     .menu-button {
         height: 40px;
         font-size: 14px;
     }
-    
-    .menu-button span {
-        margin-left: -24px;
-    }
+
+        .menu-button .menu-icon {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+        }
 }
 
 /* Поддержка prefers-reduced-motion */

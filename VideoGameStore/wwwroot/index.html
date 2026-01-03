@@ -53,7 +53,7 @@
             </div>
 
             <div class="header-right">
-                <a href="cart.html" class="action-btn cart-btn" id="cartLink">
+                <a href="cart.html" class="action-btn cart-btn" id="cartLink" style="display: none">
                     <svg class="icon cart-icon" viewBox="59 55 28 29" xmlns="http://www.w3.org/2000/svg"
                         aria-hidden="true">
                         <path
@@ -61,7 +61,6 @@
                             fill="currentColor" />
                     </svg>
                     <span class="action-label">Корзина</span>
-                    <span id="cartItemCount" class="cart-badge" style="display: none;"></span>
                 </a>
 
                 <button class="action-btn user-btn" id="userMenuToggle">
@@ -71,8 +70,8 @@
                             d="M120 70C121.97 70 123.86 69.2625 125.253 67.9497C126.646 66.637 127.429 64.8565 127.429 63C127.429 61.1435 126.646 59.363 125.253 58.0503C123.86 56.7375 121.97 56 120 56C118.03 56 116.14 56.7375 114.747 58.0503C113.354 59.363 112.571 61.1435 112.571 63C112.571 64.8565 113.354 66.637 114.747 67.9497C116.14 69.2625 118.03 70 120 70ZM117.348 72.625C111.631 72.625 107 76.9891 107 82.3758C107 83.2727 107.772 84 108.724 84H131.276C132.228 84 133 83.2727 133 82.3758C133 76.9891 128.369 72.625 122.652 72.625H117.348Z"
                             fill="currentColor" />
                     </svg>
-                    <span class="action-label" id="userMenuLabel">Войти</span>
-                    </a>
+                    <span class="action-label" id="userMenuLabel">Профиль</span>
+                </button>
             </div>
         </div>
     </header>
@@ -82,27 +81,27 @@
         <!-- Меню гостя -->
         <div id="guestMenu" class="menu-overlay guest-menu">
             <div class="menu-container" role="dialog" aria-label="Меню неавторизованного пользователя">
-                <button class="menu-button" id="mainMenuBtn">
-                    <img src="assets/icons/buy.svg" alt="" class="menu-icon" />
-                    <span>Главная</span>
-                </button>
-
-                <button class="menu-button" id="loginMenuBtn">
-                    <img src="assets/icons/user.svg" alt="" class="menu-icon" />
-                    <span>Вход в аккаунт</span>
-                </button>
-
-                <button class="menu-button" id="registerMenuBtn">
-                    <img src="assets/icons/registration.svg" alt="" class="menu-icon" />
-                    <span>Регистрация</span>
-                </button>
+                <nav class="menu-nav">
+                    <button class="menu-button" id="mainMenuBtn">
+                        <img src="assets/icons/buy.svg" alt="" class="menu-icon" />
+                        <span>Главная</span>
+                    </button>
+                    <button class="menu-button" id="loginMenuBtn">
+                        <img src="assets/icons/user.svg" alt="" class="menu-icon" />
+                        <span>Вход в аккаунт</span>
+                    </button>
+                    <button class="menu-button" id="registerMenuBtn">
+                        <img src="assets/icons/registration.svg" alt="" class="menu-icon" />
+                        <span>Регистрация</span>
+                    </button>
+                </nav>
             </div>
         </div>
 
         <!-- Меню покупателя -->
         <div id="userMenu" class="menu-overlay user-menu">
             <div class="menu-container" role="dialog" aria-label="Меню покупателя">
-                <div class="user-info">
+                <div class="menu-header">
                     <div class="user-avatar" id="userAvatar">П</div>
                     <div class="user-details">
                         <div class="user-name" id="userName">Пользователь</div>
@@ -110,24 +109,19 @@
                         <div class="user-role">Покупатель</div>
                     </div>
                 </div>
-
-                <nav class="user-nav">
+                <nav class="menu-nav">
                     <button class="menu-button" id="mainUserMenuBtn">
                         <img src="assets/icons/buy.svg" alt="" class="menu-icon" />
                         <span>Главная</span>
                     </button>
-
                     <button class="menu-button" id="ordersMenuBtn">
                         <img src="assets/icons/history.svg" alt="" class="menu-icon" />
                         <span>История заказов</span>
                     </button>
-
                     <button class="menu-button" id="cartMenuBtn">
                         <img src="assets/icons/shopping-cart.svg" alt="" class="menu-icon" />
                         <span>Корзина</span>
-                        <span id="cartItemCountMenu" class="menu-badge" style="display: none;">0</span>
                     </button>
-
                     <button class="menu-button" id="userLogoutBtn">
                         <img src="assets/icons/logout.svg" alt="" class="menu-icon" />
                         <span>Выйти</span>
@@ -139,19 +133,21 @@
         <!-- Меню продавца -->
         <div id="sellerMenu" class="menu-overlay seller-menu">
             <div class="menu-container" role="dialog" aria-label="Меню продавца">
-                <div class="user-info">
-                    <div class="user-avatar" id="sellerAvatar">П</div>
-                    <div class="user-details">
-                        <div class="user-name" id="sellerName">Продавец</div>
-                        <div class="user-email" id="sellerEmail"></div>
-                        <div class="user-role">Продавец</div>
+                <!-- Заголовок с информацией -->
+                <div class="menu-header">
+                    <div class="seller-avatar" id="sellerAvatar">П</div>
+                    <div class="seller-details">
+                        <div class="seller-name" id="sellerName">Продавец</div>
+                        <div class="seller-email" id="sellerEmail"></div>
+                        <div class="seller-role">Продавец</div>
                         <div class="seller-stats">
                             <span class="stat-item">Игр: <span id="sellerGamesCount">0</span></span>
                         </div>
                     </div>
                 </div>
 
-                <nav class="seller-nav">
+                <!-- Навигация -->
+                <nav class="menu-nav">
                     <button class="menu-button" id="mainSellerMenuBtn">
                         <img src="assets/icons/buy.svg" alt="" class="menu-icon" />
                         <span>Главная</span>
@@ -192,7 +188,6 @@
 
                 <div class="genres-inner">
                     <div class="genres-list" id="genresList">
-                        <!-- Все жанры будут добавлены через JavaScript -->
                     </div>
                 </div>
             </div>
@@ -241,7 +236,7 @@
 
                 <!-- Кнопка применения фильтра -->
                 <button class="pf-btn" id="apply-filter" aria-label="Применить фильтр">
-                    <span class="btn-text">Готово</span>
+                    <span class="btn-text">Искать</span>
                     <span class="success-icon">✓</span>
                     <span class="loader"></span>
                 </button>
@@ -293,25 +288,11 @@
 
         <!-- Пагинация -->
         <div class="pagination" id="paginationContainer">
-            <button class="page-btn prev-btn" id="prev-page" aria-label="Предыдущая страница" disabled>
-                ←
-            </button>
-
             <div class="page-numbers" id="page-numbers">
-                <!-- Страницы будут генерироваться через JavaScript -->
-            </div>
-
-            <button class="page-btn next-btn" id="next-page" aria-label="Следующая страница" disabled>
-                →
-            </button>
-
-            <div class="page-info">
-                Страница <span id="current-page">1</span> из <span id="total-pages">1</span>
             </div>
         </div>
 
-        <!-- Модальное окно просмотра товара -->
-        <div class="modal-overlay view" id="productViewOverlay" style="display: none;">
+        <div class="modal-overlay view" id="productViewOverlay" style="display: none">
             <div class="product-view-modal">
                 <button class="close-view-btn" id="closeProductViewBtn1" aria-label="Закрыть просмотр">×</button>
 
@@ -321,50 +302,52 @@
                             <div class="photo-placeholder large">
                                 <div class="no-image-text">Нет изображения</div>
                             </div>
-                            <img class="view-main-image" id="viewMainImage" style="display: none;"
-                                alt="Изображение игры">
+                            <img class="view-main-image" id="viewMainImage" src="https://via.placeholder.com/400x250?text=Product+Image" alt="Изображение игры">
                         </div>
 
                         <div class="view-description-box">
                             <label class="field-label">Описание:</label>
                             <div class="view-description-text" id="viewDescription">
-                                Здесь будет описание товара...
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat nisl ut dapibus. Mauris iaculis porttitor posuere. Praesent id metus massa, ut blandit odio. Proin quis tortor orci. Etiam at risus et justo dignissim congue. Donec congue lacinia dui, a porttitor lectus condimentum laoreet.
                             </div>
                         </div>
 
                         <div class="view-price-section">
                             <label class="field-label">Цена (₽):</label>
-                            <div class="view-price-value" id="viewPrice">0</div>
+                            <div class="view-price-value" id="viewPrice">1 290</div>
                         </div>
                     </div>
 
                     <!-- Правая секция -->
                     <div class="view-right-section">
-                        <div class="view-title" id="viewTitle">Название товара</div>
+                        <div class="view-title" id="viewTitle">The Last of Us Part II</div>
 
                         <div class="specs">
                             <div class="spec-row">
                                 <div class="spec-label">Разработчик:</div>
-                                <div class="spec-value" id="viewDeveloper">Не указано</div>
+                                <div class="spec-value" id="viewDeveloper">Naughty Dog</div>
                             </div>
 
                             <div class="spec-row">
                                 <div class="spec-label">Издатель:</div>
-                                <div class="spec-value" id="viewPublisher">Не указано</div>
+                                <div class="spec-value" id="viewPublisher">Sony Interactive Entertainment</div>
                             </div>
 
                             <div class="spec-row">
                                 <div class="spec-label">Жанры:</div>
                                 <div class="spec-value">
-                                    <div class="view-genres-container" id="viewGenresContainer"></div>
+                                    <div class="view-genres-container" id="viewGenresContainer">
+                                        <span class="genre-tag">Экшен</span>
+                                        <span class="genre-tag">Приключения</span>
+                                        <span class="genre-tag">От третьего лица</span>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="spec-row">
                                 <div class="spec-label">Доступно ключей:</div>
-                                <div class="spec-value" id="viewCount">0</div>
+                                <div class="spec-value" id="viewCount">15</div>
                             </div>
-
                         </div>
 
                         <div class="view-buttons-section">

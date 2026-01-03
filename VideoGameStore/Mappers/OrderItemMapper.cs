@@ -7,7 +7,7 @@ namespace VideoGameStore.Mappers
     {
         public OrderItemResponse ToResponse(OrderItem orderItem)
         {
-            return new OrderItemResponse(orderItem.Game.Title, orderItem.Quantity, orderItem.Price);
+            return new OrderItemResponse(orderItem.Game.Title, orderItem.Quantity, orderItem.Price, orderItem.Keys);
         }
 
         public OrderItem ToEntity(OrderItemRequest itemRequest, Game game, List<string> keys)
